@@ -1,0 +1,43 @@
+<div class="grid-2">
+    <label>Tech<input id="refTech" type="text" /></label>
+    <label>Job #<input id="refJobNumber" type="text" /></label>
+    <label>Customer<input id="refCustomer" type="text" /></label>
+    <label>City<input id="refCity" type="text" /></label>
+
+    <label>Equipment Type
+        <select id="refEquipmentType">
+            <option value="Split System">Split System</option>
+            <option value="Package Unit">Package Unit</option>
+            <option value="Mini Split">Mini Split</option>
+            <option value="Heat Pump">Heat Pump</option>
+            <option value="Other">Other</option>
+        </select>
+    </label>
+
+    <label>Refrigerant Type
+        <select id="refRefrigerantType">
+            <option value="R-410A">R-410A</option>
+            <option value="R-32">R-32</option>
+            <option value="R-22">R-22</option>
+            <option value="R-454B">R-454B</option>
+            <option value="Other">Other</option>
+        </select>
+    </label>
+
+    <label>Pounds Added (lb)<input id="refPoundsAdded" type="number" step="0.01" min="0" /></label>
+    <label>Pounds Recovered (lb)<input id="refPoundsRecovered" type="number" step="0.01" min="0" /></label>
+
+    <label>Leak Suspected?
+        <select id="refLeakSuspected">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+        </select>
+    </label>
+
+    <label>Notes<input id="refNotes" type="text" /></label>
+</div>
+
+<div class="top-space">
+    <button class="calc-btn" type="button" onclick="submitRefrigerantLog()">Submit Log</button>
+</div>
+<div id="refLogResult" class="result-box">Complete fields and tap Submit Log.</div>

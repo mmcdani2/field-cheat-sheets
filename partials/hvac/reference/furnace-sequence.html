@@ -1,0 +1,92 @@
+<p><strong>Purpose:</strong> Fast, defensible diagnosis for <strong>no-heat</strong> gas furnace calls by following
+    sequence of operation instead of guessing.</p>
+
+<h4>Normal Sequence of Operation</h4>
+<ol>
+    <li>Thermostat calls for heat (W energized).</li>
+    <li>Control board starts inducer motor.</li>
+    <li>Pressure switch proves draft.</li>
+    <li>Ignition source energizes (HSI or spark).</li>
+    <li>Gas valve opens.</li>
+    <li>Burners light; flame sensor proves flame.</li>
+    <li>Indoor blower starts after timed delay.</li>
+    <li>System satisfies thermostat, burners shut off, blower off-delay runs.</li>
+</ol>
+
+<h4>No-Heat Diagnostic Workflow</h4>
+<ol>
+    <li>Read fault code first (board LED pattern).</li>
+    <li>Confirm thermostat call at board terminals (R to W).</li>
+    <li>Verify line voltage and control voltage integrity.</li>
+    <li>Step through sequence and identify exact break point.</li>
+    <li>Perform confirming meter test before replacing any part.</li>
+</ol>
+
+<h4>Break Point → Probable Cause → Confirming Test</h4>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Break Point</th>
+                <th>Likely Causes</th>
+                <th>Confirming Test</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Inducer does not start</td>
+                <td>No call, board output failure, inducer motor failure, power issue</td>
+                <td>Check W call, board inducer output voltage, motor amp/ohm, line voltage</td>
+            </tr>
+            <tr>
+                <td>Pressure switch won’t close</td>
+                <td>Vent blockage, condensate issue, cracked/plugged tubing, weak inducer</td>
+                <td>Measure draft/pressure, inspect venting/tubing/trap, verify switch continuity at proper draft</td>
+            </tr>
+            <tr>
+                <td>Igniter not glowing/sparking</td>
+                <td>Failed igniter, no board output, wiring fault</td>
+                <td>Check igniter resistance/continuity, verify ignition voltage output</td>
+            </tr>
+            <tr>
+                <td>Gas valve not opening</td>
+                <td>No valve command, valve failure, safeties open</td>
+                <td>Verify valve coil voltage during trial, check safeties in series</td>
+            </tr>
+            <tr>
+                <td>Flame lights then drops out</td>
+                <td>Weak flame signal, dirty sensor, poor ground/polarity</td>
+                <td>Measure flame rectification microamps, clean sensor, verify grounding and polarity</td>
+            </tr>
+            <tr>
+                <td>Burners run but blower delayed/absent</td>
+                <td>Blower motor/capacitor/ECM issue, board fan output issue</td>
+                <td>Verify fan output voltage, motor amp draw, capacitor µF, speed tap/profile</td>
+            </tr>
+            <tr>
+                <td>High-limit trips</td>
+                <td>Low airflow, dirty filter/coil, undersized ducts, high temp rise</td>
+                <td>Measure temp rise vs nameplate, static pressure, inspect airflow path</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>Quick Tips (New + Veteran Techs)</h4>
+<ul>
+    <li>Fault code is a starting point, not final diagnosis.</li>
+    <li>Flame sensor issues are often signal/ground quality—not just “dirty sensor.”</li>
+    <li>Always verify airflow before condemning limit switches.</li>
+    <li>Capture readings (voltage, amps, µA flame signal, temp rise) for callback defense.</li>
+</ul>
+
+<h4>Closeout Data to Record</h4>
+<ul>
+    <li>Fault code observed</li>
+    <li>Break point in sequence</li>
+    <li>Confirming test result</li>
+    <li>Repair performed</li>
+    <li>Final heat cycle verification (multiple cycles)</li>
+</ul>
+
+<p class="note">Rule: “Measure, then replace.” Parts swapping kills margin and callback rate.</p>

@@ -1,0 +1,133 @@
+<p><strong>Purpose:</strong> Diagnose electrical failures with meter data, not guesswork. This is the fastest path to
+    fewer callbacks and cleaner closeout notes.</p>
+
+<h4>Safety First (Non-Negotiable)</h4>
+<ul>
+    <li>Lockout/tagout where required.</li>
+    <li>Verify meter operation on known live source before and after testing.</li>
+    <li>Discharge capacitors safely before capacitance checks.</li>
+    <li>Use proper PPE and one-hand rule where applicable.</li>
+</ul>
+
+<h4>Core Electrical Workflow (Any No-Cool / No-Heat Call)</h4>
+<ol>
+    <li><strong>Confirm call:</strong> Thermostat demand present (Y, G, W, O/B as applicable).</li>
+    <li><strong>Confirm high voltage:</strong> Line voltage at disconnect, contactor line side, and equipment lugs.</li>
+    <li><strong>Confirm control voltage:</strong> 24V path through safeties and board outputs.</li>
+    <li><strong>Test components:</strong> Capacitor, contactor coil/contacts, motors, board outputs, safeties.</li>
+    <li><strong>Validate result:</strong> Re-run system and capture amps/voltage/temps after repair.</li>
+</ol>
+
+<h4>Quick Test Targets</h4>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>What to Check</th>
+                <th>Field Pass/Fail Cue</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Capacitor</td>
+                <td>Measured µF vs label rating</td>
+                <td>Replace if out of tolerance (commonly ±6% unless otherwise marked)</td>
+            </tr>
+            <tr>
+                <td>Contactor Coil</td>
+                <td>24V at coil on call</td>
+                <td>24V present but no pull-in = failed coil/mechanical bind</td>
+            </tr>
+            <tr>
+                <td>Contactor Contacts</td>
+                <td>Voltage drop across closed contacts</td>
+                <td>Excessive drop = pitted/high resistance contacts</td>
+            </tr>
+            <tr>
+                <td>Compressor/Fan Motor</td>
+                <td>Voltage at motor + amp draw trend</td>
+                <td>Correct voltage + no run = motor/start issue; high amps = load/restriction issue</td>
+            </tr>
+            <tr>
+                <td>Control Board</td>
+                <td>Input present / output missing</td>
+                <td>If correct input but no commanded output, board likely failed</td>
+            </tr>
+            <tr>
+                <td>Safeties (float, pressure, limits)</td>
+                <td>Open/closed state under normal conditions</td>
+                <td>Open safety breaks call path; verify root cause before bypass removal</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>Capacitor How-To</h4>
+<ol>
+    <li>Power off and verify zero volts.</li>
+    <li>Discharge capacitor safely.</li>
+    <li>Remove at least one lead to avoid backfeed reading.</li>
+    <li>Measure µF (C-FAN and C-HERM on dual cap).</li>
+    <li>Compare to label value and tolerance; replace if out.</li>
+</ol>
+<p class="note">If a capacitor failed, inspect motor amp draw and condenser cleanliness so the new one doesn’t fail
+    again.</p>
+
+<h4>Contactor How-To</h4>
+<ol>
+    <li>On call, verify 24V across coil terminals.</li>
+    <li>If coil energizes, check line/load voltage and contact condition.</li>
+    <li>Measure voltage drop across closed contacts; high drop = resistance/heat risk.</li>
+    <li>Inspect for ants/debris/pitting/welded contacts.</li>
+</ol>
+
+<h4>Motor Diagnostics (Condenser Fan / Blower)</h4>
+<ul>
+    <li>Verify commanded voltage at motor terminals.</li>
+    <li>Check capacitor (PSC) or module/control signal (ECM).</li>
+    <li>Compare running amps to nameplate context (FLA/RLA where applicable).</li>
+    <li>Inspect for mechanical drag: blade rub, tight bearings, wheel debris, high static.</li>
+</ul>
+
+<h4>Control Voltage Fault Isolation (24V)</h4>
+<ol>
+    <li>Start at transformer secondary (~24V).</li>
+    <li>Trace through thermostat call and safety chain.</li>
+    <li>Find where voltage is lost (open switch, broken wire, failed board relay).</li>
+    <li>Repair cause, then re-test full sequence.</li>
+</ol>
+<p class="note">Best practice: “Last good point / first bad point” method. It is fast and defensible.</p>
+
+<h4>Common Patterns and Likely Causes</h4>
+<ul>
+    <li><strong>Outdoor dead, indoor blower runs:</strong> open contactor coil circuit, float switch, pressure switch,
+        board output, or disconnect issue.</li>
+    <li><strong>Contactor chatters:</strong> weak low-voltage supply, loose connections, failing transformer,
+        thermostat/control issue.</li>
+    <li><strong>Breaker trips on startup:</strong> short to ground, locked rotor, failed compressor, pinched wiring,
+        failed capacitor/start components.</li>
+    <li><strong>Burned wire terminals:</strong> loose lugs/high resistance heating—repair terminal and root-cause
+        current draw.</li>
+</ul>
+
+<h4>Quick Tips (New + Veteran Techs)</h4>
+<ul>
+    <li>Take a photo of wiring before moving anything.</li>
+    <li>Tighten and re-check all replaced terminals—comeback prevention 101.</li>
+    <li>Don’t condemn a board until inputs, grounds, and safeties are verified.</li>
+    <li>Record before/after readings in notes: volts, amps, µF, and call path status.</li>
+    <li>If electrical symptom appears with airflow/refrigerant symptoms, solve systemically—not component by component.
+    </li>
+</ul>
+
+<h4>Closeout Data to Log</h4>
+<ul>
+    <li>Line voltage and control voltage readings</li>
+    <li>Capacitor measured µF (old/new)</li>
+    <li>Amp draw (compressor/fans/blower as applicable)</li>
+    <li>Failed component + confirming test result</li>
+    <li>Post-repair run verification (cool/heat confirmed)</li>
+</ul>
+
+<p class="note">Standard: No part replacement without a confirming measurement documented in the ticket.</p>

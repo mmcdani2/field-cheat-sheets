@@ -119,7 +119,7 @@ h4 {
   border-top: 1px solid var(--line);
 }
 
-.acc-item.open .acc-panel {
+.acc-item.open > .acc-panel {
   display: block;
 }
 

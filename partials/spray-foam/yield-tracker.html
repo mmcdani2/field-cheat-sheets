@@ -1,0 +1,16 @@
+<div class="grid-2">
+    <label>Installed Area (sq ft)
+        <input id="areaSqft" type="number" step="0.01" placeholder="e.g. 3200" />
+    </label>
+    <label>Average Thickness (in)
+        <input id="thicknessIn" type="number" step="0.01" placeholder="e.g. 3.5" />
+    </label>
+    <label>Sets Used
+        <input id="setsUsed" type="number" step="0.01" placeholder="e.g. 2.5" />
+    </label>
+    <label>Theoretical Yield / Set (BF)
+        <input id="theoreticalSetYield" type="number" step="1" value="4000" />
+    </label>
+</div>
+<button class="calc-btn" type="button" onclick="calcYieldTracker()">Calculate Yield</button>
+<div id="yieldResults" class="result-box">Enter values and tap Calculate Yield.</div>

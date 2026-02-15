@@ -1,0 +1,43 @@
+<p><strong>Goal:</strong> Do not roll until this checklist is green.</p>
+
+<h4>1) Job Scope & Documentation</h4>
+<label><input type="checkbox" id="ipScope1" /> Final scope reviewed (equipment, accessories, duct/line-set/electrical
+    scope)</label>
+<label><input type="checkbox" id="ipScope2" /> Load/design basis confirmed (or documented replacement basis)</label>
+<label><input type="checkbox" id="ipScope3" /> Proposal/notes match field conditions (no open assumptions)</label>
+<label><input type="checkbox" id="ipScope4" /> Permits/inspection requirements verified</label>
+
+<h4>2) Equipment & Material Readiness</h4>
+<label><input type="checkbox" id="ipMat1" /> Correct condenser/air handler/furnace/coil model numbers verified</label>
+<label><input type="checkbox" id="ipMat2" /> Refrigerant type confirmed and available</label>
+<label><input type="checkbox" id="ipMat3" /> Line-set size/length + fittings/insulation available</label>
+<label><input type="checkbox" id="ipMat4" /> Drain materials/trap/float switch materials on truck</label>
+<label><input type="checkbox" id="ipMat5" /> Electrical kit complete (disconnect, whip, breakers/fuses, wire,
+    lugs)</label>
+<label><input type="checkbox" id="ipMat6" /> Mounting materials ready (pad/stand/hangers/vibration
+    isolation/anchors)</label>
+<label><input type="checkbox" id="ipMat7" /> Thermostat + accessories ready (IAQ, UV, surge, etc. if sold)</label>
+
+<h4>3) Crew, Schedule & Site Logistics</h4>
+<label><input type="checkbox" id="ipLog1" /> Crew assigned with lead tech identified</label>
+<label><input type="checkbox" id="ipLog2" /> Start time confirmed with customer</label>
+<label><input type="checkbox" id="ipLog3" /> Site access confirmed (gate codes, pets, attic/crawl clearance,
+    parking)</label>
+<label><input type="checkbox" id="ipLog4" /> Old equipment disposal plan confirmed</label>
+<label><input type="checkbox" id="ipLog5" /> Rain/temperature contingencies reviewed</label>
+
+<h4>4) Tools, Test Instruments & Safety</h4>
+<label><input type="checkbox" id="ipTool1" /> Vacuum pump + micron gauge + core tools packed</label>
+<label><input type="checkbox" id="ipTool2" /> Nitrogen setup + regulator + leak detection ready</label>
+<label><input type="checkbox" id="ipTool3" /> Manifold/probes/meters calibrated/charged</label>
+<label><input type="checkbox" id="ipTool4" /> Recovery machine/cylinder available (if needed)</label>
+<label><input type="checkbox" id="ipTool5" /> Ladders/PPE/fire extinguisher/first-aid kit ready</label>
+
+<h4>5) Commissioning & Closeout Plan</h4>
+<label><input type="checkbox" id="ipClose1" /> Required startup readings list reviewed with crew</label>
+<label><input type="checkbox" id="ipClose2" /> Photo documentation requirements reviewed</label>
+<label><input type="checkbox" id="ipClose3" /> Customer walkthrough/thermostat training assigned</label>
+<label><input type="checkbox" id="ipClose4" /> Warranty registration responsibility assigned</label>
+
+<button class="calc-btn" type="button" onclick="checkInstallPreparedness()">Check Readiness</button>
+<div id="ipResults" class="result-box">Complete checklist and tap Check Readiness.</div>

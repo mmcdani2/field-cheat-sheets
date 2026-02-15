@@ -1,0 +1,11 @@
+<div class="grid-2">
+    <label>Sell Price ($)<input id="gmSellPrice" type="number" step="0.01" /></label>
+    <label>Material Cost ($)<input id="gmMaterialCost" type="number" step="0.01" /></label>
+    <label>Labor Hours<input id="gmLaborHours" type="number" step="0.01" /></label>
+    <label>Loaded Labor Rate ($/hr)<input id="gmLaborRate" type="number" step="0.01" /></label>
+    <label>Permit / Sub / Misc ($)<input id="gmOtherCost" type="number" step="0.01" /></label>
+    <label>Target Margin (%)<input id="gmTargetMargin" type="number" step="0.1" value="45" /></label>
+</div>
+
+<button class="calc-btn" type="button" onclick="calcGrossMargin()">Calculate Margin</button>
+<div id="gmResults" class="result-box">Enter values and tap Calculate.</div>

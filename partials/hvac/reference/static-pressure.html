@@ -1,0 +1,66 @@
+<!-- partials/hvac/reference/static-pressure.html -->
+<p><strong>Purpose:</strong> Use <strong>TESP (Total External Static Pressure)</strong> to confirm airflow health before
+    charge or component conclusions.</p>
+
+<h4>When to Use</h4>
+<ul>
+    <li>No-cool/low-capacity/high-utility or comfort imbalance complaints.</li>
+    <li>Freeze-up callbacks or repeated part failures.</li>
+    <li>Before final charge adjustments or blower-speed decisions.</li>
+</ul>
+
+<h4>How-To</h4>
+<ol>
+    <li>Install proper test ports near equipment cabinet (return and supply sides, external to blower/coil as
+        applicable).</li>
+    <li>Measure return static (typically negative) and supply static (typically positive).</li>
+    <li>Use magnitudes for total: <strong>TESP = |Return| + |Supply|</strong>.</li>
+    <li>Compare TESP to equipment blower performance table / rated max external static.</li>
+    <li>If TESP is high, locate dominant side (return vs supply) and isolate restrictions.</li>
+</ol>
+
+<h4>Quick Tips</h4>
+<ul>
+    <li>Static is not optional—it's the gatekeeper for valid refrigerant diagnosis.</li>
+    <li>Same test locations every visit = comparable history.</li>
+    <li>Check filter, coil, dampers, and grilles before touching charge.</li>
+    <li>Document both total static and side split (return vs supply) for faster root cause isolation.</li>
+</ul>
+
+<h4>Common Failures</h4>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Symptom</th>
+                <th>Likely Cause</th>
+                <th>First Check</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>High return static</td>
+                <td>Dirty filter, undersized return, blocked return path</td>
+                <td>Filter status, return grille free area, closed doors/pressure imbalance</td>
+            </tr>
+            <tr>
+                <td>High supply static</td>
+                <td>Dirty indoor coil, closed dampers/registers, undersized supply trunks</td>
+                <td>Coil face condition, damper positions, branch restrictions</td>
+            </tr>
+            <tr>
+                <td>High total static (both sides elevated)</td>
+                <td>System-wide airflow choke</td>
+                <td>Blower setting/profile, duct design limits, accessory pressure drops</td>
+            </tr>
+            <tr>
+                <td>Low static but poor comfort</td>
+                <td>Duct leakage/bypass, wrong fan profile, mixed air issues</td>
+                <td>Duct integrity, blower configuration, return leakage pathways</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p class="note">Field rule: If static is out of range, fix airflow first—charge and Delta-T conclusions are
+    low-confidence until then.</p>

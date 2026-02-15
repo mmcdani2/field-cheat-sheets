@@ -1,0 +1,306 @@
+<div
+  class="accordion nested-accordion"
+  data-accordion
+  data-allow-multiple="true"
+>
+  <!-- Walls -->
+  <article class="acc-item">
+    <button class="acc-trigger" type="button">Walls</button>
+    <div class="acc-panel">
+      <div class="grid-2">
+        <label
+          >How many walls?
+          <input
+            id="sfWallCount"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="e.g. 8"
+          />
+        </label>
+
+        <div id="sfWallsContainer" class="top-space">
+          <p class="note">Enter wall count to generate L × H inputs.</p>
+        </div>
+
+        <label
+          >Windows + Doors Sqft
+          <input
+            id="sfOpeningsSqft"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 120"
+          />
+        </label>
+
+        <label
+          >Wall Thickness (in)
+          <input
+            id="sfWallThickness"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 3.5"
+          />
+        </label>
+
+        <label
+          >Wall Foam Type
+          <select id="sfWallFoam">
+            <option value="OC">Open Cell (OC)</option>
+            <option value="CC">Closed Cell (CC)</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="top-space">
+        <button class="calc-btn" type="button" id="sfGenerateWallsBtn">
+          Generate Wall Inputs
+        </button>
+      </div>
+
+      <div id="sfWallsContainer" class="top-space"></div>
+
+      <p class="note">
+        Wall gross sqft auto-calculates from Length × Height entries.
+      </p>
+    </div>
+  </article>
+
+  <!-- Roof -->
+  <article class="acc-item">
+    <button class="acc-trigger" type="button">Roof</button>
+    <div class="acc-panel">
+      <div class="grid-2">
+        <label
+          >Roof Length (ft)
+          <input id="sfRoofL" type="number" step="0.01" placeholder="e.g. 60"
+        /></label>
+        <label
+          >Roof Width (ft)
+          <input id="sfRoofW" type="number" step="0.01" placeholder="e.g. 40"
+        /></label>
+        <label
+          >Pitch Multiplier
+          <select id="sfPitchMult">
+            <option value="1.003">1/12 (1.003)</option>
+            <option value="1.014">2/12 (1.014)</option>
+            <option value="1.031">3/12 (1.031)</option>
+            <option value="1.054">4/12 (1.054)</option>
+            <option value="1.083">5/12 (1.083)</option>
+            <option value="1.118">6/12 (1.118)</option>
+            <option value="1.158">7/12 (1.158)</option>
+            <option value="1.202">8/12 (1.202)</option>
+            <option value="1.250">9/12 (1.250)</option>
+            <option value="1.302">10/12 (1.302)</option>
+            <option value="1.357">11/12 (1.357)</option>
+            <option value="1.414">12/12 (1.414)</option>
+          </select>
+        </label>
+        <label
+          >Roof Thickness (in)
+          <input
+            id="sfRoofThickness"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 5.5"
+        /></label>
+        <label
+          >Roof Foam Type
+          <select id="sfRoofFoam">
+            <option value="OC">Open Cell (OC)</option>
+            <option value="CC">Closed Cell (CC)</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </article>
+
+  <!-- Gables -->
+  <article class="acc-item">
+    <button class="acc-trigger" type="button">Gables (Optional)</button>
+    <div class="acc-panel">
+      <div class="grid-2">
+        <label
+          >Gable Base (ft)
+          <input
+            id="sfGableBase"
+            type="number"
+            step="0.01"
+            placeholder="blank if none"
+        /></label>
+        <label
+          >Base-to-Peak Height (ft)
+          <input
+            id="sfGableHeight"
+            type="number"
+            step="0.01"
+            placeholder="blank if none"
+        /></label>
+        <label
+          >Number of Gables
+          <input
+            id="sfGableCount"
+            type="number"
+            step="1"
+            placeholder="blank if none"
+        /></label>
+        <label
+          >Gable Thickness (in)
+          <input
+            id="sfGableThickness"
+            type="number"
+            step="0.01"
+            placeholder="blank if none"
+        /></label>
+        <label
+          >Gable Foam Type
+          <select id="sfGableFoam">
+            <option value="OC">Open Cell (OC)</option>
+            <option value="CC">Closed Cell (CC)</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </article>
+
+  <!-- Rim / Linear -->
+  <article class="acc-item">
+    <button class="acc-trigger" type="button">Rim / Linear Areas</button>
+    <div class="acc-panel">
+      <div class="grid-2">
+        <label
+          >Linear Feet (LF)
+          <input
+            id="sfLinearFt"
+            type="number"
+            step="0.01"
+            placeholder="blank if none"
+        /></label>
+        <label
+          >Band Height (ft)
+          <input
+            id="sfLinearHeight"
+            type="number"
+            step="0.01"
+            placeholder="blank if none"
+        /></label>
+        <label
+          >Thickness (in)
+          <input
+            id="sfLinearThickness"
+            type="number"
+            step="0.01"
+            placeholder="blank if none"
+        /></label>
+        <label
+          >Foam Type
+          <select id="sfLinearFoam">
+            <option value="OC">Open Cell (OC)</option>
+            <option value="CC">Closed Cell (CC)</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </article>
+
+  <!-- Adjusters -->
+  <article class="acc-item">
+    <button class="acc-trigger" type="button">Adjusters</button>
+    <div class="acc-panel">
+      <div class="grid-2">
+        <label
+          >OC Framing Factor (%)
+          <input
+            id="sfOcFramePct"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 10"
+        /></label>
+        <label
+          >OC Waste Factor (%)
+          <input
+            id="sfOcWastePct"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 8"
+        /></label>
+        <label
+          >CC Framing Factor (%)
+          <input
+            id="sfCcFramePct"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 10"
+        /></label>
+        <label
+          >CC Waste Factor (%)
+          <input
+            id="sfCcWastePct"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 8"
+        /></label>
+      </div>
+    </div>
+  </article>
+
+  <!-- Costing -->
+  <article class="acc-item">
+    <button class="acc-trigger" type="button">Costing</button>
+    <div class="acc-panel">
+      <!-- Locked material costs -->
+      <input id="sfOcCostBf" type="hidden" value="0.09" />
+      <input id="sfCcCostBf" type="hidden" value="0.475" />
+
+      <div class="grid-2">
+        <label
+          >Helpers (count)
+          <input id="sfHelpers" type="number" step="1" placeholder="e.g. 1"
+        /></label>
+        <label
+          >Hours
+          <input id="sfHours" type="number" step="0.01" placeholder="e.g. 8"
+        /></label>
+        <label
+          >Loaded $/Hour
+          <input
+            id="sfLoadedRate"
+            type="number"
+            step="0.01"
+            placeholder="default 40 if blank"
+        /></label>
+        <label
+          >Fuel ($)
+          <input id="sfFuel" type="number" step="0.01" placeholder="e.g. 75"
+        /></label>
+        <label
+          >Consumables ($)
+          <input
+            id="sfConsumables"
+            type="number"
+            step="0.01"
+            placeholder="e.g. 50"
+        /></label>
+        <label
+          >Target Margin (%)
+          <input
+            id="sfTargetMargin"
+            type="number"
+            step="0.1"
+            placeholder="e.g. 40"
+        /></label>
+      </div>
+    </div>
+  </article>
+</div>
+
+<button class="calc-btn" type="button" onclick="calcSprayFullJobEstimate()">
+  Calculate Job
+</button>
+<div id="sfFullJobResults" class="result-box">
+  Enter values and tap Calculate Job.
+</div>
+<p class="note">
+  Material rates are preset (OC $0.09/BF, CC $0.475/BF). Final pricing is
+  subject to field verification.
+</p>

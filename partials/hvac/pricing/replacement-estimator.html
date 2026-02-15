@@ -1,0 +1,51 @@
+<!-- replacement-estimator.html -->
+<div class="grid-2">
+    <label>
+        System Capacity (tons)
+        <input id="reTons" type="number" step="0.5" min="0" placeholder="e.g. 3" />
+    </label>
+
+    <label>
+        Equipment Cost ($)
+        <input id="reEquipCost" type="number" step="0.01" min="0" placeholder="e.g. 4200" />
+    </label>
+
+    <label>
+        Install Labor Hours
+        <input id="reLaborHours" type="number" step="0.25" min="0" placeholder="e.g. 16" />
+    </label>
+
+    <label>
+        Materials / Misc Cost ($)
+        <input id="reMiscCost" type="number" step="0.01" min="0" placeholder="e.g. 650" />
+    </label>
+
+    <label>
+        Duct Work Needed?
+        <select id="reDuctNeeded" onchange="toggleDuctFields()">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+        </select>
+    </label>
+
+    <label id="reDuctFeetWrap" style="display:none;">
+        Duct Linear Feet
+        <input id="reDuctFeet" type="number" step="1" min="0" placeholder="e.g. 120" />
+    </label>
+
+    <label id="reDuctRateWrap" style="display:none;">
+        Duct Price per Foot ($)
+        <input id="reDuctRate" type="number" step="0.01" min="0" value="18" />
+    </label>
+
+    <label>
+        Target Margin (%)
+        <input id="reTargetMargin" type="number" step="0.1" min="1" max="95" value="40" />
+    </label>
+</div>
+
+<button class="calc-btn" type="button" onclick="calcReplacementEstimate()">
+    Calculate Price
+</button>
+
+<div id="reResults" class="result-box">Enter values and tap Calculate Price.</div>

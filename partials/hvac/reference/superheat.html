@@ -1,0 +1,67 @@
+<!-- partials/hvac/reference/superheat.html -->
+<p><strong>Purpose:</strong> Charge and diagnose <strong>fixed-orifice/piston systems</strong> using measured superheat
+    versus target.</p>
+
+<h4>When to Use</h4>
+<ul>
+    <li>Indoor coil uses a fixed metering device (not TXV/EEV controlling evaporator feed).</li>
+    <li>You need to evaluate underfeed/overfeed risk at the evaporator.</li>
+    <li>Airflow has already been verified as acceptable.</li>
+</ul>
+
+<h4>How-To</h4>
+<ol>
+    <li>Confirm refrigerant type and system metering style.</li>
+    <li>Measure suction pressure at outdoor service port.</li>
+    <li>Convert suction pressure to suction saturation temp (PT chart/app).</li>
+    <li>Measure suction line temperature on insulated section near condenser service area.</li>
+    <li>Calculate: <strong>Superheat = Suction Line Temp - Suction Saturation Temp</strong>.</li>
+    <li>Compare measured SH to target SH chart (typically indoor WB + outdoor DB inputs).</li>
+    <li>Adjust refrigerant in small increments only, then re-stabilize and re-check.</li>
+</ol>
+
+<h4>Quick Tips</h4>
+<ul>
+    <li>Clamp placement and insulation over probe matter—bad placement gives fake SH.</li>
+    <li>Do not evaluate charge until airflow/static/filter/coil are baseline-correct.</li>
+    <li>Record ambient and indoor load conditions so readings are defensible later.</li>
+    <li>Trend data for several minutes; don’t react to one transient reading.</li>
+</ul>
+
+<h4>Common Failures</h4>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Symptom</th>
+                <th>Likely Cause</th>
+                <th>First Check</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Superheat high vs target</td>
+                <td>Undercharge, evaporator starvation, low indoor load misread</td>
+                <td>Leak indicators, airflow baseline, compare with subcool trend</td>
+            </tr>
+            <tr>
+                <td>Superheat low vs target</td>
+                <td>Overfeed/overcharge, low load, floodback risk</td>
+                <td>Compressor return conditions, suction temp stability, ambient context</td>
+            </tr>
+            <tr>
+                <td>Superheat unstable/wild</td>
+                <td>Probe placement issue, intermittent airflow, unstable load</td>
+                <td>Re-seat/insulate probe, verify blower consistency, watch trend over time</td>
+            </tr>
+            <tr>
+                <td>“Normal SH” but poor comfort</td>
+                <td>Distribution/duct/control issue, latent load problem</td>
+                <td>Static pressure, Delta-T method, duct leakage/mixed air checks</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p class="note">Field rule: On fixed-orifice systems, superheat is a charging metric only after airflow and load sanity
+    checks are complete.</p>

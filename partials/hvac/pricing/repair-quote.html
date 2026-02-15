@@ -1,0 +1,29 @@
+<div class="grid-2">
+    <label>
+        Repair Type
+        <select id="rqRepairType">
+            <option value="Capacitor">Capacitor</option>
+            <option value="Contactor">Contactor</option>
+            <option value="Fan Motor">Fan Motor</option>
+            <option value="Blower Motor">Blower Motor</option>
+            <option value="Control Board">Control Board</option>
+            <option value="TXV">TXV</option>
+            <option value="Refrigerant Leak Repair">Refrigerant Leak Repair</option>
+            <option value="Drain/Float Switch">Drain/Float Switch</option>
+            <option value="Other">Other</option>
+        </select>
+    </label>
+
+    <label>
+        Part Cost ($)
+        <input id="rqPartCost" type="number" step="0.01" placeholder="e.g. 180" />
+    </label>
+
+    <label>
+        Labor Hours
+        <input id="rqLaborHours" type="number" step="0.01" placeholder="e.g. 2" />
+    </label>
+</div>
+
+<button class="calc-btn" type="button" onclick="calcRepairQuote()">Build Quote</button>
+<div id="rqResults" class="result-box">Enter values and tap Build Quote.</div>

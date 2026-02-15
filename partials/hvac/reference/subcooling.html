@@ -1,0 +1,67 @@
+<!-- partials/hvac/reference/subcooling.html -->
+<p><strong>Purpose:</strong> Charge and validate <strong>TXV/EEV systems</strong> using measured subcooling versus
+    manufacturer target.</p>
+
+<h4>When to Use</h4>
+<ul>
+    <li>System controls evaporator superheat with TXV/EEV.</li>
+    <li>Nameplate/install docs provide target subcooling guidance.</li>
+    <li>System is running in stable cooling conditions with verified airflow.</li>
+</ul>
+
+<h4>How-To</h4>
+<ol>
+    <li>Confirm refrigerant type and OEM target subcooling.</li>
+    <li>Measure liquid pressure at outdoor unit service port.</li>
+    <li>Convert liquid pressure to saturation temperature (PT chart/app).</li>
+    <li>Measure liquid line temperature near condenser outlet/service valve.</li>
+    <li>Calculate: <strong>Subcooling = Liquid Saturation Temp - Liquid Line Temp</strong>.</li>
+    <li>Compare measured SC to OEM target.</li>
+    <li>Adjust in small increments, allow stabilization, then re-check SC and operating data.</li>
+</ol>
+
+<h4>Quick Tips</h4>
+<ul>
+    <li>OEM target beats rule-of-thumb every time.</li>
+    <li>Dirty condenser coil or weak fan can fake an overcharge picture.</li>
+    <li>Log ambient, head pressure trend, and condenser airflow state with SC reading.</li>
+    <li>Verify line set length/diameter and install notes if readings seem inconsistent.</li>
+</ul>
+
+<h4>Common Failures</h4>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Symptom</th>
+                <th>Likely Cause</th>
+                <th>First Check</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Subcooling low vs target</td>
+                <td>Undercharge, flash gas, low condenser fill</td>
+                <td>Leak indicators, charge history, line set issues, SH/SC pairing</td>
+            </tr>
+            <tr>
+                <td>Subcooling high vs target</td>
+                <td>Overcharge, condenser-side backup, restricted heat rejection</td>
+                <td>Condenser coil/fan condition, ambient/load context, non-condensable suspicion</td>
+            </tr>
+            <tr>
+                <td>SC swings rapidly</td>
+                <td>Unstable operation, fan cycling anomalies, measurement error</td>
+                <td>Probe contact/insulation, fan control behavior, trend over several minutes</td>
+            </tr>
+            <tr>
+                <td>Target SC achieved, comfort still poor</td>
+                <td>Airflow/distribution/control issue</td>
+                <td>TESP/static, Delta-T method consistency, zoning/damper behavior</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p class="note">Field rule: For TXV/EEV systems, charge to target subcooling only after condenser and airflow conditions
+    are verified clean and stable.</p>

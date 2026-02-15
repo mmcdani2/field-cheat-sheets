@@ -1,0 +1,27 @@
+<p><strong>Do not close out the job until every required item is complete.</strong></p>
+
+<div class="grid-2">
+    <label><input type="checkbox" id="ccThermostat" /> Thermostat configured and tested</label>
+    <label><input type="checkbox" id="ccFilter" /> Filter installed / verified</label>
+    <label><input type="checkbox" id="ccDrain" /> Drain and float safety verified</label>
+    <label><input type="checkbox" id="ccStatic" /> Static pressure captured</label>
+    <label><input type="checkbox" id="ccSHSC" /> SH/SC captured (as applicable)</label>
+    <label><input type="checkbox" id="ccDeltaT" /> Delta-T captured</label>
+    <label><input type="checkbox" id="ccAmpsVolts" /> Voltage / amperage captured</label>
+    <label><input type="checkbox" id="ccPhotos" /> Required photos uploaded</label>
+    <label><input type="checkbox" id="ccCustomerWalk" /> Customer walkthrough complete</label>
+</div>
+
+<div class="top-space">
+    <button class="calc-btn" type="button" onclick="checkCommissioningGate()">
+        Check Closeout Status
+    </button>
+</div>
+
+<div id="ccResults" class="result-box">
+    Complete checklist and tap Check Closeout Status.
+</div>
+
+<p class="note">
+    Closeout standard: no exceptions on safety, drainage, documentation, or customer handoff.
+</p>

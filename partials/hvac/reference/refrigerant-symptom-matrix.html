@@ -1,0 +1,72 @@
+<p><strong>Purpose:</strong> Use pressure/temperature patterns as a <strong>triage tool</strong>, then confirm with
+    SH/SC, airflow, and electrical data.</p>
+
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Observed Pattern</th>
+                <th>Likely Causes</th>
+                <th>First Checks</th>
+                <th>Do Not Do</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Low suction + low head</td>
+                <td>Undercharge, evaporator starvation, low load</td>
+                <td>Leak search, SH/SC, airflow baseline, indoor load context</td>
+                <td>Do not add charge blindly without leak/airflow verification</td>
+            </tr>
+            <tr>
+                <td>Low suction + high head</td>
+                <td>Liquid line restriction, metering restriction, severe airflow issue</td>
+                <td>Filter/coil/static, temp drop across restriction points, subcool trend</td>
+                <td>Do not condemn compressor first</td>
+            </tr>
+            <tr>
+                <td>High suction + low head</td>
+                <td>Compressor inefficiency, valve damage, bypassing</td>
+                <td>Compression ratio, amp draw trend, discharge temp behavior</td>
+                <td>Do not assume overcharge</td>
+            </tr>
+            <tr>
+                <td>High suction + high head</td>
+                <td>Overcharge, non-condensables, heavy load, condenser airflow degradation</td>
+                <td>Condenser coil/fan, SC trend, ambient/load context, recovery history</td>
+                <td>Do not recover charge before confirming airflow/load conditions</td>
+            </tr>
+            <tr>
+                <td>Normal pressures, poor cooling</td>
+                <td>Airflow/distribution issue, duct leakage, mixed air, control fault</td>
+                <td>TESP/static split, blower profile, delta-T location method, duct inspection</td>
+                <td>Do not force refrigerant adjustment to fix comfort complaint</td>
+            </tr>
+            <tr>
+                <td>Head pressure climbs over time</td>
+                <td>Condenser airflow collapse, fouled coil, fan cycling issue, non-condensables</td>
+                <td>Fan amps/capacitor, coil cleanliness, ambient rise, SC trend</td>
+                <td>Do not keep unit running hard without protection checks</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>How to Use This Matrix Correctly</h4>
+<ol>
+    <li>Stabilize operating conditions and verify airflow first.</li>
+    <li>Capture full data set: pressures, line temps, SH, SC, Delta-T, static, amps.</li>
+    <li>Match observed pattern to likely causes.</li>
+    <li>Run one confirming test per likely cause.</li>
+    <li>Repair only after confirmation, then re-test and document final readings.</li>
+</ol>
+
+<h4>Quick Tips (New + Veteran Techs)</h4>
+<ul>
+    <li>One odd reading is noise; trend over several minutes is signal.</li>
+    <li>Airflow faults can mimic charge faults almost perfectly.</li>
+    <li>Always confirm refrigerant type before PT interpretation.</li>
+    <li>Use the same probe placement each visit to keep data comparable.</li>
+</ul>
+
+<p class="note">Matrix is a decision accelerator, not a replacement for confirmatory testing.</p>

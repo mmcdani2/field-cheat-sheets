@@ -12,7 +12,7 @@ import {
   calcCostPerBF,
   calcSprayFullJobEstimate,
   generateWallInputs,
-} from "./spray-foam/spray-foam-calculators.js";
+} from "./spray-foam/spray-foam-calculator.js";
 
 import { submitRefrigerantLog } from "./hvac/hvac-refrigerant.js";
 

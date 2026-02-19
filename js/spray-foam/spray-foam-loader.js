@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!mount) return;
 
   const sections = [
+    {
+      title: "Full Job Estimator",
+      file: "partials/spray-foam/full-job-estimator.html",
+    },
     { title: "Yield Tracker", file: "partials/spray-foam/yield-tracker.html" },
     {
       title: "Cost per BF Calculator",
       file: "partials/spray-foam/cost-per-bf.html",
-    },
-    {
-      title: "Full Job Estimator",
-      file: "partials/spray-foam/full-job-estimator.html",
     },
     {
       title: "Field Quick Reference",

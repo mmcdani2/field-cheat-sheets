@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const sections = [
     {
-      title: "Full Job Estimator",
+      title: "Spray Insulation Estimator",
       file: "partials/spray-foam/full-job-estimator.html",
     },
     { title: "Yield Tracker", file: "partials/spray-foam/yield-tracker.html" },

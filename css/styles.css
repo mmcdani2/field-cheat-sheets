@@ -182,6 +182,75 @@ input[type="checkbox"] {
   margin-top: 10px;
 }
 
+/* =========================
+   NEW: Compact mobile inputs (Walls L/H style)
+   ========================= */
+
+/* Optional section title row inside panels */
+.row-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 10px;
+}
+
+.row-title h4 {
+  margin: 0;
+}
+
+/* "How many walls?" row stays clean/full width */
+.count-row {
+  margin-bottom: 12px;
+}
+
+/* Two-up mini grid (L/H) */
+.mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* One wall row: label above each compact input */
+.mini-field {
+  display: grid;
+  gap: 6px;
+}
+
+/* Smaller label text for L1/H1 style */
+.mini-label {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--text);
+  letter-spacing: 0.2px;
+}
+
+/* Compact input sizing */
+.mini-input {
+  margin-top: 0;              /* label already has spacing */
+  padding: 8px 10px;          /* smaller than default */
+  border-radius: 8px;
+  height: 38px;               /* consistent compact height */
+  font-size: 0.95rem;
+}
+
+/* Make number inputs not feel huge on iOS */
+.mini-input[type="number"] {
+  appearance: textfield;
+}
+.mini-input[type="number"]::-webkit-outer-spin-button,
+.mini-input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* On larger screens, you can optionally widen spacing a bit */
+@media (min-width: 780px) {
+  .mini-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
+
 /* Tables */
 .table-wrap {
   width: 100%;
@@ -263,6 +332,10 @@ th {
     font-size: 0.9rem;
   }
 
+  /* Keep mini layout crisp on phone */
+  .mini-label { font-size: 0.8rem; }
+  .mini-input { height: 36px; padding: 7px 9px; font-size: 0.9rem; }
+
   th,
   td {
     font-size: 0.78rem;
@@ -273,4 +346,130 @@ th {
   .note {
     font-size: 0.8rem;
   }
+}
+
+/* =========================
+   Spray Foam - Wall mini grid (mobile clean)
+   ========================= */
+
+.mini-table {
+  display: grid;
+  gap: 10px;
+}
+
+.mini-head,
+.mini-row,
+.mini-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* left label column */
+.mini-title {
+  min-width: 72px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+/* right inputs column */
+.mini-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 260px; /* keeps inputs tight on phones */
+}
+
+/* compact inputs */
+.mini-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #3a3d42;
+  background: #101113;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+/* header cells "L" and "H" */
+.mini-col {
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* total row */
+.mini-total-label {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.mini-total-val {
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+/* slightly tighter on very small screens */
+@media (max-width: 380px) {
+  .mini-title { min-width: 64px; }
+  .mini-cols { max-width: 220px; gap: 8px; }
+  .mini-input { padding: 7px 9px; font-size: 0.88rem; }
+}
+
+/* =========================
+   Spray Foam - Wall mini grid v2 (label on top + spacing)
+   ========================= */
+
+.mini-table {
+  gap: 12px; /* overall spacing */
+}
+
+/* keep the header as a 3-col grid: (blank) (L) (H) */
+.mini-head {
+  display: grid;
+  grid-template-columns: 72px 1fr 1fr;
+  align-items: end;
+  gap: 10px;
+}
+
+/* each wall becomes a mini "section" */
+.mini-row {
+  display: grid;
+  grid-template-columns: 1fr; /* stack label then inputs */
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #131416;
+}
+
+/* top label inside the mini section */
+.mini-row .mini-title {
+  min-width: 0;
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+/* inputs side-by-side */
+.mini-row .mini-cols {
+  max-width: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* optional: tighten input height a hair */
+.mini-row .mini-input {
+  padding: 8px 10px;
+}
+
+/* small phones */
+@media (max-width: 380px) {
+  .mini-head { grid-template-columns: 64px 1fr 1fr; }
+  .mini-row { padding: 9px; }
+  .mini-row .mini-cols { gap: 8px; }
 }

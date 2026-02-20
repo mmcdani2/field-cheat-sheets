@@ -80,20 +80,70 @@ export function generateWallInputs() {
     return;
   }
 
-  let html = `<div class="grid-2">`;
+  let html = `
+    <div class="mini-table">
+      <div class="mini-head">
+
+        </div>
+      </div>
+      <div class="mini-rows">
+  `;
+
   for (let i = 1; i <= count; i++) {
     html += `
-      <label>Wall ${i} Length (ft)
-        <input type="number" step="0.01" min="0" id="sfWallLen_${i}" placeholder="e.g. 24" />
-      </label>
-      <label>Wall ${i} Height (ft)
-        <input type="number" step="0.01" min="0" id="sfWallHgt_${i}" placeholder="e.g. 10" />
-      </label>
+      <div class="mini-row">
+        <div class="mini-title">L${i} / H${i}</div>
+        <div class="mini-cols">
+          <input
+            class="mini-input"
+            inputmode="decimal"
+            type="number"
+            step="0.01"
+            min="0"
+            id="sfWallLen_${i}"
+            placeholder="ft"
+          />
+          <input
+            class="mini-input"
+            inputmode="decimal"
+            type="number"
+            step="0.01"
+            min="0"
+            id="sfWallHgt_${i}"
+            placeholder="ft"
+          />
+        </div>
+      </div>
     `;
   }
-  html += `</div>`;
+
+  html += `
+      </div>
+      <div class="mini-foot">
+        <div class="mini-total-label">Wall Gross Sqft</div>
+        <div class="mini-total-val" id="sfWallGrossSqft">0</div>
+      </div>
+    </div>
+  `;
+
   container.innerHTML = html;
+
+  // Live update total when any wall input changes
+  const update = () => {
+    const total = calcWallGrossSqft();
+    const out = $("sfWallGrossSqft");
+    if (out) out.textContent = fmt(total, 0);
+  };
+
+  container.addEventListener("input", (e) => {
+    if (e.target?.id?.startsWith("sfWallLen_") || e.target?.id?.startsWith("sfWallHgt_")) {
+      update();
+    }
+  });
+
+  update();
 }
+
 
 function calcWallGrossSqft() {
   const count = parseInt($("sfWallCount")?.value || "0", 10);
@@ -101,12 +151,15 @@ function calcWallGrossSqft() {
 
   let total = 0;
   for (let i = 1; i <= count; i++) {
-    const L = Number.parseFloat($(`sfWallLen_${i}`)?.value || "0");
-    const H = Number.parseFloat($(`sfWallHgt_${i}`)?.value || "0");
-    total += (Number.isFinite(L) ? L : 0) * (Number.isFinite(H) ? H : 0);
+    const len = Number.parseFloat($(`sfWallLen_${i}`)?.value || "");
+    const hgt = Number.parseFloat($(`sfWallHgt_${i}`)?.value || "");
+    const L = Number.isFinite(len) ? len : 0;
+    const H = Number.isFinite(hgt) ? hgt : 0;
+    total += L * H;
   }
   return total;
 }
+
 
 export function calcSprayFullJobEstimate() {
   // Walls (dynamic)

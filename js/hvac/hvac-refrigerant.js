@@ -1,59 +1,349 @@
-import { $, toNum } from "../core.js";
+import {
+  byId,
+  clearStatus,
+  createWizard,
+  populateSelect,
+  showError,
+  showStatus
+} from '../core.js'
+import { STATES } from '../data/states.js'
+import { REFRIGERANT_TYPES } from '../data/refrigerant-types.js'
+import { SYSTEM_TYPES } from '../data/system-types.js'
+import { flushQueue, getQueueCount, queueSubmission } from '../offline-queue.js'
 
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxXQMKS7z9XqZNUGBCAMiE12YgNnq0w-ZjjZ_vcv-X0q5URtFgc3JvRWKJeVAificqx/exec";
+const WEB_APP_URL =
+  'https://script.google.com/macros/s/AKfycby-mLUIwoSTYPerbvQTmA578AQYiaj0lrG--dxQMytHn3H0a90OnltOY1DWETDjYeTi/exec'
 
-export async function submitRefrigerantLog() {
-  const out = $("refLogResult");
-  if (!out) return;
+const MODULE_KEY = 'refrigerant-log'
 
-  const payload = {
-    tech: $("refTech")?.value?.trim() || "",
-    jobNumber: $("refJobNumber")?.value?.trim() || "",
-    customer: $("refCustomer")?.value?.trim() || "",
-    city: $("refCity")?.value?.trim() || "",
-    equipmentType: $("refEquipmentType")?.value || "",
-    refrigerantType: $("refRefrigerantType")?.value || "",
-    poundsAdded: toNum("refPoundsAdded"),
-    poundsRecovered: toNum("refPoundsRecovered"),
-    leakSuspected: $("refLeakSuspected")?.value || "No",
-    notes: $("refNotes")?.value?.trim() || ""
-  };
+const steps = Array.from(document.querySelectorAll('.wizard-step'))
+const progressEl = byId('wizardProgress')
+const stepTextEl = byId('wizardStepText')
+const nextBtn = byId('nextBtn')
+const backBtn = byId('backBtn')
+const errorBox = byId('wizardError')
+const statusBox = byId('wizardStatus')
+const formEl = byId('refWizardForm')
+const reviewList = byId('reviewList')
+const queueIndicator = byId('queueIndicator')
+const queueIndicatorText = byId('queueIndicatorText')
 
-  if (!payload.tech || !payload.jobNumber || !payload.refrigerantType) {
-    out.textContent = "Tech, Job #, and Refrigerant Type are required.";
-    return;
-  }
+function getFieldValue (id) {
+  return byId(id)?.value?.trim() || ''
+}
 
-  try {
-    out.textContent = "Submitting...";
+function getNum (id) {
+  const raw = byId(id)?.value ?? ''
+  const n = Number.parseFloat(raw)
+  return Number.isFinite(n) ? n : 0
+}
 
-    const res = await fetch(WEB_APP_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
-    });
+function ouncesToDecimalPounds (lbs, oz) {
+  return Number((lbs + oz / 16).toFixed(2))
+}
 
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.ok) {
-      out.textContent = `Submit failed: ${data.error || `HTTP ${res.status}`}`;
-      return;
-    }
+function populateStates () {
+  const select = byId('refState')
+  if (!select) return
 
-    out.textContent = "Log submitted successfully ✅";
+  populateSelect(
+    select,
+    STATES.map(state => ({
+      value: state.code,
+      label: state.name
+    })),
+    'Select state'
+  )
+}
 
-    ["refTech","refJobNumber","refCustomer","refCity","refNotes"].forEach((id) => {
-      const el = $(id); if (el) el.value = "";
-    });
+function populateSystemTypes () {
+  const select = byId('refEquipmentType')
+  if (!select) return
 
-    ["refEquipmentType","refRefrigerantType","refLeakSuspected"].forEach((id) => {
-      const el = $(id); if (el) el.selectedIndex = 0;
-    });
+  populateSelect(select, SYSTEM_TYPES, 'Select equipment type')
+}
 
-    ["refPoundsAdded","refPoundsRecovered"].forEach((id) => {
-      const el = $(id); if (el) el.value = "";
-    });
+function populateRefrigerantTypes () {
+  const select = byId('refRefrigerantType')
+  if (!select) return
 
-  } catch (err) {
-    out.textContent = `Network/error: ${String(err)}`;
+  populateSelect(select, REFRIGERANT_TYPES, 'Select refrigerant type')
+}
+
+function getPayload () {
+  const poundsAdded = ouncesToDecimalPounds(
+    getNum('refAddedLbs'),
+    getNum('refAddedOz')
+  )
+  const poundsRecovered = ouncesToDecimalPounds(
+    getNum('refRecoveredLbs'),
+    getNum('refRecoveredOz')
+  )
+
+  return {
+    techName: getFieldValue('refTech'),
+    jobNumber: getFieldValue('refJobNumber'),
+    customerName: getFieldValue('refCustomer'),
+    city: getFieldValue('refCity'),
+    state: getFieldValue('refState'),
+    equipmentType: getFieldValue('refEquipmentType'),
+    refrigerantType: getFieldValue('refRefrigerantType'),
+    poundsAdded,
+    poundsRecovered,
+    leakSuspected: getFieldValue('refLeakSuspected'),
+    notes: getFieldValue('refNotes')
   }
 }
+
+function showStepError (message, id) {
+  showError(errorBox, message)
+  byId(id)?.focus()
+  return false
+}
+
+function validateStep (stepIndex) {
+  if (stepIndex === 0 && !getFieldValue('refTech')) {
+    return showStepError('Tech Name is required.', 'refTech')
+  }
+
+  if (stepIndex === 1 && !getFieldValue('refJobNumber')) {
+    return showStepError('Housecall Pro Job # is required.', 'refJobNumber')
+  }
+
+  if (stepIndex === 2 && !getFieldValue('refCustomer')) {
+    return showStepError('Customer Name is required.', 'refCustomer')
+  }
+
+  if (stepIndex === 3) {
+    if (!getFieldValue('refCity')) {
+      return showStepError('City is required.', 'refCity')
+    }
+    if (!getFieldValue('refState')) {
+      return showStepError('State is required.', 'refState')
+    }
+  }
+
+  if (stepIndex === 4 && !getFieldValue('refEquipmentType')) {
+    return showStepError('Equipment Type is required.', 'refEquipmentType')
+  }
+
+  if (stepIndex === 5 && !getFieldValue('refRefrigerantType')) {
+    return showStepError('Refrigerant Type is required.', 'refRefrigerantType')
+  }
+
+  if (stepIndex === 6) {
+    const lbs = getNum('refAddedLbs')
+    const oz = getNum('refAddedOz')
+
+    if (lbs === 0 && oz === 0) {
+      return showStepError('Enter refrigerant added.', 'refAddedLbs')
+    }
+
+    if (oz < 0 || oz >= 16) {
+      return showStepError(
+        'Added ounces must be between 0 and 15.9.',
+        'refAddedOz'
+      )
+    }
+  }
+
+  if (stepIndex === 7) {
+    const lbs = getNum('refRecoveredLbs')
+    const oz = getNum('refRecoveredOz')
+
+    if (lbs === 0 && oz === 0) {
+      return showStepError('Enter refrigerant recovered.', 'refRecoveredLbs')
+    }
+
+    if (oz < 0 || oz >= 16) {
+      return showStepError(
+        'Recovered ounces must be between 0 and 15.9.',
+        'refRecoveredOz'
+      )
+    }
+  }
+
+  if (stepIndex === 8 && !getFieldValue('refLeakSuspected')) {
+    return showStepError('Leak Suspected is required.', 'refLeakSuspected')
+  }
+
+  return true
+}
+
+function renderReview () {
+  if (!reviewList) return
+
+  const payload = getPayload()
+
+  const items = [
+    ['Tech Name', payload.techName],
+    ['Housecall Pro Job #', payload.jobNumber],
+    ['Customer Name', payload.customerName],
+    ['City / State', `${payload.city}, ${payload.state}`],
+    ['Equipment Type', payload.equipmentType],
+    ['Refrigerant Type', payload.refrigerantType],
+    ['Added', `${payload.poundsAdded} lb`],
+    ['Recovered', `${payload.poundsRecovered} lb`],
+    ['Leak Suspected', payload.leakSuspected],
+    ['Notes', payload.notes || '—']
+  ]
+
+  reviewList.innerHTML = items
+    .map(
+      ([label, value]) => `
+        <div class="rounded-xl border border-white/10 bg-neutral-900/70 px-4 py-3">
+          <div class="text-xs uppercase tracking-wide text-white/45">${label}</div>
+          <div class="mt-1 text-sm font-medium text-white">${value}</div>
+        </div>
+      `
+    )
+    .join('')
+}
+
+function setQueueIndicator (count) {
+  if (!queueIndicator || !queueIndicatorText) return
+
+  if (count > 0) {
+    queueIndicator.classList.remove('hidden')
+    queueIndicatorText.textContent = `${count} queued for sync`
+    return
+  }
+
+  queueIndicator.classList.add('hidden')
+  queueIndicatorText.textContent = ''
+}
+
+async function updateQueueStatus () {
+  const count = await getQueueCount(MODULE_KEY)
+  setQueueIndicator(count)
+}
+
+async function postPayload (payload, endpoint = WEB_APP_URL) {
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  })
+
+  const data = await res.json().catch(() => ({}))
+
+  if (!res.ok || data.ok !== true) {
+    throw new Error(data.error || `HTTP ${res.status}`)
+  }
+
+  return data
+}
+
+async function tryFlushQueue () {
+  const result = await flushQueue({
+    module: MODULE_KEY,
+    submitFn: async item => {
+      await postPayload(item.payload, item.endpoint)
+    }
+  })
+
+  if (!result.skipped && result.sent > 0) {
+    showStatus(
+      statusBox,
+      `${result.sent} queued submission${
+        result.sent === 1 ? '' : 's'
+      } synced successfully.`
+    )
+  }
+
+  await updateQueueStatus()
+}
+
+async function submitLog () {
+  const payload = getPayload()
+
+  clearStatus(statusBox)
+  nextBtn.disabled = true
+  nextBtn.textContent = 'Submitting...'
+
+  try {
+    if (!navigator.onLine) {
+      await queueSubmission({
+        module: MODULE_KEY,
+        endpoint: WEB_APP_URL,
+        payload
+      })
+
+      showStatus(
+        statusBox,
+        'No connection. Log saved locally and will sync when online.'
+      )
+      formEl?.reset()
+      populateStates()
+      populateSystemTypes()
+      populateRefrigerantTypes()
+      wizard.setCurrentStep(0)
+      await updateQueueStatus()
+      return
+    }
+
+    await postPayload(payload)
+
+    showStatus(statusBox, 'Log submitted successfully.')
+    formEl?.reset()
+    populateStates()
+    populateSystemTypes()
+    populateRefrigerantTypes()
+    wizard.setCurrentStep(0)
+
+    await tryFlushQueue()
+  } catch (err) {
+    await queueSubmission({
+      module: MODULE_KEY,
+      endpoint: WEB_APP_URL,
+      payload
+    })
+
+    showStatus(
+      statusBox,
+      `Submit failed live. Log saved locally and will retry when online. (${String(
+        err
+      )})`,
+      false
+    )
+
+    formEl?.reset()
+    populateStates()
+    populateSystemTypes()
+    populateRefrigerantTypes()
+    wizard.setCurrentStep(0)
+    await updateQueueStatus()
+  } finally {
+    nextBtn.disabled = false
+    nextBtn.textContent = 'Next'
+  }
+}
+
+const wizard = createWizard({
+  steps,
+  progressEl,
+  stepTextEl,
+  nextBtn,
+  backBtn,
+  errorBox,
+  onRenderStep: stepIndex => {
+    if (stepIndex === steps.length - 1) {
+      renderReview()
+    }
+  },
+  onValidateStep: validateStep,
+  onSubmit: submitLog,
+  submitLabel: 'Submit Log',
+  nextLabel: 'Next'
+})
+
+window.addEventListener('online', () => {
+  tryFlushQueue()
+})
+
+populateStates()
+populateSystemTypes()
+populateRefrigerantTypes()
+wizard.renderStep()
+updateQueueStatus()
+tryFlushQueue()

@@ -1,0 +1,13 @@
+export const SYSTEM_TYPES = [
+  { value: 'Split System AC', label: 'Split System AC' },
+  { value: 'Split System Heat Pump', label: 'Split System Heat Pump' },
+  { value: 'Gas Furnace + AC', label: 'Gas Furnace + AC' },
+  { value: 'Air Handler + Heat Pump', label: 'Air Handler + Heat Pump' },
+  { value: 'Package Unit', label: 'Package Unit' },
+  { value: 'Mini Split', label: 'Mini Split' },
+  { value: 'Commercial RTU', label: 'Commercial RTU' },
+  { value: 'Walk-In Cooler', label: 'Walk-In Cooler' },
+  { value: 'Walk-In Freezer', label: 'Walk-In Freezer' },
+  { value: 'Ice Machine', label: 'Ice Machine' },
+  { value: 'Other', label: 'Other' }
+]

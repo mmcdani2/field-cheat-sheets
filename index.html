@@ -1,24 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Urban Field Reference</title>
-    <link rel="stylesheet" href="css/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urban Field Reference</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="min-h-screen bg-neutral-950 text-white">
+  <main class="min-h-screen flex items-center justify-center p-4">
+    <section class="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 shadow-2xl">
+      <div class="mb-6">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-400/90">
+          Field App
+        </p>
+        <h1 class="mt-2 text-3xl font-black tracking-tight">
+          Urban Field Reference
+        </h1>
+        <p class="mt-2 text-sm text-white/70">
+          Choose a company view.
+        </p>
+      </div>
 
-<body>
-    <main class="shell">
-        <section class="hero-card">
-            <h1>Urban Field Tools</h1>
+      <div class="space-y-3">
+        <a
+          href="divisions/hvac.html"
+          class="flex min-h-[60px] w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-left transition active:scale-[0.99]"
+        >
+          <div>
+            <div class="text-base font-bold">Urban Mechanical</div>
+            <div class="text-sm text-white/60">HVAC tools</div>
+          </div>
+          <span class="text-white/40">→</span>
+        </a>
 
-            <div class="home-actions">
-                <a class="btn btn-spray" href="spray-foam.html">Urban Spray Foam</a>
-                <a class="btn btn-hvac" href="hvac.html">Urban Mechanical</a>
-            </div>
-        </section>
-    </main>
+        <a
+          href="divisions/spray-foam.html"
+          class="flex min-h-[60px] w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-left transition active:scale-[0.99]"
+        >
+          <div>
+            <div class="text-base font-bold">Urban Spray Foam</div>
+            <div class="text-sm text-white/60">Spray foam tools</div>
+          </div>
+          <span class="text-white/40">→</span>
+        </a>
+      </div>
+    </section>
+  </main>
 </body>
-
 </html>

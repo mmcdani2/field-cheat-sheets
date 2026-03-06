@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Urban Mechanical | Quick Pricing Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="../../js/hvac/quick-pricing-calc.js"></script>
+  </head>
+  <body class="min-h-screen bg-neutral-950 text-white">
+    <main class="min-h-screen p-4">
+      <section class="mx-auto w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 shadow-2xl">
+        <a
+          href="../../index.html"
+          class="inline-flex items-center text-sm text-white/70 transition hover:text-white"
+        >
+          ← Back
+        </a>
+
+        <div class="mt-4">
+          <p class="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-400/90">
+            Urban Mechanical
+          </p>
+          <h1 class="mt-2 text-3xl font-black tracking-tight">
+            Quick Pricing Tool
+          </h1>
+          <p class="mt-2 text-sm leading-relaxed text-white/65">
+            Enter material cost and labor hours. The app uses preset rates to generate a quick field quote.
+          </p>
+        </div>
+
+        <div class="mt-5 space-y-4">
+          <div>
+            <label for="materialCost" class="mb-2 block text-sm font-medium text-white/85">
+              Material Cost
+            </label>
+            <input
+              id="materialCost"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              placeholder="0.00"
+              class="w-full rounded-2xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30"
+            />
+          </div>
+
+          <div>
+            <label for="laborHours" class="mb-2 block text-sm font-medium text-white/85">
+              Labor Hours
+            </label>
+            <input
+              id="laborHours"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.25"
+              placeholder="0.0"
+              class="w-full rounded-2xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30"
+            />
+          </div>
+
+          <div>
+            <label for="laborRate" class="mb-2 block text-sm font-medium text-white/85">
+              Labor Rate ($/hr)
+            </label>
+            <input
+              id="laborRate"
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              class="w-full rounded-2xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none"
+            />
+          </div>
+
+          <div>
+            <label for="targetMargin" class="mb-2 block text-sm font-medium text-white/85">
+              Target Margin (%)
+            </label>
+            <input
+              id="targetMargin"
+              type="number"
+              inputmode="decimal"
+              min="1"
+              max="95"
+              step="1"
+              class="w-full rounded-2xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none"
+            />
+          </div>
+        </div>
+
+        <div class="mt-5 rounded-2xl border border-white/10 bg-neutral-900/70 p-4">
+          <div class="text-xs uppercase tracking-[0.2em] text-white/45">Results</div>
+
+          <div class="mt-4 space-y-3">
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm text-white/65">Labor Cost</span>
+              <span id="laborCost" class="text-lg font-bold text-white">$0.00</span>
+            </div>
+
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm text-white/65">Total Cost</span>
+              <span id="totalCost" class="text-lg font-bold text-white">$0.00</span>
+            </div>
+
+            <div class="border-t border-white/10 pt-3">
+              <div class="flex items-center justify-between gap-4">
+                <span class="text-sm text-white/65">Suggested Quote</span>
+                <span id="quotePrice" class="text-2xl font-black tracking-tight text-cyan-300">$0.00</span>
+              </div>
+              <div id="marginLabel" class="mt-1 text-xs text-white/45">50% target margin</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button
+            type="button"
+            id="resetBtn"
+            class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/85 transition hover:bg-white/10"
+          >
+            Reset
+          </button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

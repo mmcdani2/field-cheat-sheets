@@ -28,6 +28,8 @@ const reviewList = byId('reviewList')
 const queueIndicator = byId('queueIndicator')
 const queueIndicatorText = byId('queueIndicatorText')
 
+let statusTimer = null
+
 function getFieldValue (id) {
   return byId(id)?.value?.trim() || ''
 }
@@ -101,6 +103,20 @@ function showStepError (message, id) {
   return false
 }
 
+function showTimedStatus (message, ok = true, ms = 4000) {
+  if (statusTimer) {
+    clearTimeout(statusTimer)
+    statusTimer = null
+  }
+
+  showStatus(statusBox, message, ok)
+
+  statusTimer = setTimeout(() => {
+    clearStatus(statusBox)
+    statusTimer = null
+  }, ms)
+}
+
 function validateStep (stepIndex) {
   if (stepIndex === 0 && !getFieldValue('refTech')) {
     return showStepError('Tech Name is required.', 'refTech')
@@ -135,8 +151,8 @@ function validateStep (stepIndex) {
     const lbs = getNum('refAddedLbs')
     const oz = getNum('refAddedOz')
 
-    if (lbs === 0 && oz === 0) {
-      return showStepError('Enter refrigerant added.', 'refAddedLbs')
+    if (lbs < 0) {
+      return showStepError('Added pounds cannot be negative.', 'refAddedLbs')
     }
 
     if (oz < 0 || oz >= 16) {
@@ -151,8 +167,11 @@ function validateStep (stepIndex) {
     const lbs = getNum('refRecoveredLbs')
     const oz = getNum('refRecoveredOz')
 
-    if (lbs === 0 && oz === 0) {
-      return showStepError('Enter refrigerant recovered.', 'refRecoveredLbs')
+    if (lbs < 0) {
+      return showStepError(
+        'Recovered pounds cannot be negative.',
+        'refRecoveredLbs'
+      )
     }
 
     if (oz < 0 || oz >= 16) {
@@ -243,8 +262,7 @@ async function tryFlushQueue () {
   })
 
   if (!result.skipped && result.sent > 0) {
-    showStatus(
-      statusBox,
+    showTimedStatus(
       `${result.sent} queued submission${
         result.sent === 1 ? '' : 's'
       } synced successfully.`
@@ -284,7 +302,7 @@ async function submitLog () {
 
     await postPayload(payload)
 
-    showStatus(statusBox, 'Log submitted successfully.')
+    showTimedStatus('Log submitted successfully.')
     formEl?.reset()
     populateStates()
     populateSystemTypes()

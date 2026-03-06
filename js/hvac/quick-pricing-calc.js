@@ -1,4 +1,4 @@
-import { LABOR_RATES, PRICING_DEFAULTS } from '../../data/labor-rates.js'
+import { LABOR_RATES, PRICING_DEFAULTS } from '../data/labor-rates.js'
 
 const materialCostEl = document.getElementById('materialCost')
 const laborHoursEl = document.getElementById('laborHours')

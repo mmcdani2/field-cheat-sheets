@@ -8,7 +8,15 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         hvac: resolve(__dirname, 'hvac.html'),
         sprayFoam: resolve(__dirname, 'spray-foam.html'),
-        refrigerantLog: resolve(__dirname, 'partials/hvac/refrigerant-log.html')
+        refrigerantLog: resolve(__dirname, 'partials/hvac/refrigerant-log.html'),
+        recentSubmissions: resolve(
+          __dirname,
+          'partials/hvac/recent-submissions.html'
+        ),
+        quickPricingTool: resolve(
+          __dirname,
+          'partials/hvac/quick-pricing-tool.html'
+        )
       }
     }
   }

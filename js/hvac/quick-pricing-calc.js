@@ -1,9 +1,8 @@
-import { LABOR_RATES, PRICING_DEFAULTS } from '../data/labor-rates.js'
+import { LABOR_RATES, PRICING_TIERS } from '../data/labor-rates.js'
 
 const materialCostEl = document.getElementById('materialCost')
 const laborHoursEl = document.getElementById('laborHours')
-const laborRateEl = document.getElementById('laborRate')
-const targetMarginEl = document.getElementById('targetMargin')
+const tierButtons = Array.from(document.querySelectorAll('.tierBtn'))
 
 const laborCostEl = document.getElementById('laborCost')
 const totalCostEl = document.getElementById('totalCost')
@@ -12,25 +11,48 @@ const marginLabelEl = document.getElementById('marginLabel')
 
 const resetBtn = document.getElementById('resetBtn')
 
-function currency(value) {
+let selectedTier = 'med'
+
+function currency (value) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'
   }).format(Number(value) || 0)
 }
 
-function num(value) {
+function num (value) {
   const parsed = Number.parseFloat(value)
   return Number.isFinite(parsed) ? parsed : 0
 }
 
-function calculate() {
+function getLaborRate () {
+  return Number(LABOR_RATES.hvacService || 0)
+}
+
+function getTargetMargin () {
+  return Number(PRICING_TIERS[selectedTier] || 0)
+}
+
+function getTargetMarginPercent () {
+  return getTargetMargin() * 100
+}
+
+function renderTierButtons () {
+  tierButtons.forEach(btn => {
+    const isActive = btn.dataset.tier === selectedTier
+
+    btn.className = isActive
+      ? 'tierBtn rounded-2xl border border-cyan-400/30 bg-cyan-500/15 px-4 py-3 text-sm font-semibold text-cyan-200'
+      : 'tierBtn rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/85'
+  })
+}
+
+function calculate () {
   const materialCost = num(materialCostEl?.value)
   const laborHours = num(laborHoursEl?.value)
-  const laborRate = num(laborRateEl?.value)
-  const targetMarginPercent = num(targetMarginEl?.value)
-
-  const targetMargin = targetMarginPercent / 100
+  const laborRate = getLaborRate()
+  const targetMargin = getTargetMargin()
+  const targetMarginPercent = getTargetMarginPercent()
 
   const laborCost = laborHours * laborRate
   const totalCost = materialCost + laborCost
@@ -44,23 +66,32 @@ function calculate() {
   if (laborCostEl) laborCostEl.textContent = currency(laborCost)
   if (totalCostEl) totalCostEl.textContent = currency(totalCost)
   if (quotePriceEl) quotePriceEl.textContent = currency(quote)
-  if (marginLabelEl) marginLabelEl.textContent = `${targetMarginPercent.toFixed(0)}% target margin`
+  if (marginLabelEl) {
+    marginLabelEl.textContent = `${targetMarginPercent.toFixed(
+      0
+    )}% target margin`
+  }
+
+  renderTierButtons()
 }
 
 function resetForm() {
   if (materialCostEl) materialCostEl.value = ''
   if (laborHoursEl) laborHoursEl.value = ''
-  if (laborRateEl) laborRateEl.value = String(LABOR_RATES.hvacService)
-  if (targetMarginEl) targetMarginEl.value = String(PRICING_DEFAULTS.targetMargin * 100)
+  selectedTier = 'med'
   calculate()
 }
 
-if (laborRateEl) laborRateEl.value = String(LABOR_RATES.hvacService)
-if (targetMarginEl) targetMarginEl.value = String(PRICING_DEFAULTS.targetMargin * 100)
-
-;[materialCostEl, laborHoursEl, laborRateEl, targetMarginEl].forEach((el) => {
+;[materialCostEl, laborHoursEl].forEach((el) => {
   el?.addEventListener('input', calculate)
   el?.addEventListener('change', calculate)
+})
+
+tierButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    selectedTier = btn.dataset.tier || 'med'
+    calculate()
+  })
 })
 
 resetBtn?.addEventListener('click', resetForm)

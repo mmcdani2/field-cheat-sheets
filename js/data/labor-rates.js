@@ -1,7 +1,9 @@
 export const LABOR_RATES = {
-  hvacService: 95
+  hvacService: 40
 }
 
-export const PRICING_DEFAULTS = {
-  targetMargin: 0.5
+export const PRICING_TIERS = {
+  low: 0.35,
+  med: 0.4,
+  high: 0.5
 }

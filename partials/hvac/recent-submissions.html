@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Urban Mechanical | Recent Submissions</title>
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/icons/favicon-32.png"
+    />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      type="module"
+      src="../../js/hvac/hvac-recent-submissions.js"
+    ></script>
+  </head>
+
+  <body class="min-h-screen bg-neutral-950 text-white">
+    <main class="min-h-screen p-4">
+      <section
+        class="mx-auto w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 shadow-2xl"
+      >
+        <a
+          href="../../partials/hvac/refrigerant-log.html"
+          class="inline-flex items-center text-sm text-white/70 transition hover:text-white"
+        >
+          ← Back
+        </a>
+
+        <div class="mt-4">
+          <p
+            class="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-400/90"
+          >
+            Urban Mechanical
+          </p>
+
+          <h1 class="mt-2 text-3xl font-black tracking-tight">
+            Recent Submissions
+          </h1>
+
+          <p class="mt-2 text-sm leading-relaxed text-white/65">
+            Review refrigerant logs that are still stored on this device.
+          </p>
+
+          <div class="mt-4 flex flex-wrap items-center gap-2">
+            <div
+              id="connectionBadge"
+              class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/80"
+            >
+              <span
+                id="connectionDot"
+                class="h-2 w-2 rounded-full bg-emerald-300"
+              ></span>
+              <span id="connectionText">Online</span>
+            </div>
+
+            <div
+              class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/80"
+            >
+              <span class="h-2 w-2 rounded-full bg-cyan-300"></span>
+              <span>Queue Manager</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 grid grid-cols-2 gap-3">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-[11px] uppercase tracking-[0.2em] text-white/45">
+              Waiting
+            </div>
+            <div
+              id="queuedCount"
+              class="mt-2 text-2xl font-black tracking-tight text-white"
+            >
+              0
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-[11px] uppercase tracking-[0.2em] text-white/45">
+              Failed
+            </div>
+            <div
+              id="failedCount"
+              class="mt-2 text-2xl font-black tracking-tight text-white"
+            >
+              0
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            id="retryAllBtn"
+            class="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/15"
+          >
+            Retry Sync
+          </button>
+
+          <button
+            type="button"
+            id="refreshBtn"
+            class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10"
+          >
+            Refresh
+          </button>
+        </div>
+
+        <div
+          id="pageStatus"
+          class="mt-4 hidden rounded-xl border px-4 py-3 text-sm"
+        ></div>
+
+        <div
+          class="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm leading-relaxed text-white/65"
+        >
+          This screen currently shows logs still saved locally on the phone or
+          device. Successfully synced logs are not yet stored as local history.
+        </div>
+
+        <div class="mt-5">
+          <div
+            id="emptyState"
+            class="hidden rounded-2xl border border-white/10 bg-white/5 px-4 py-5 text-sm text-white/65"
+          >
+            No queued or failed refrigerant logs right now.
+          </div>
+
+          <div id="submissionList" class="space-y-3"></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

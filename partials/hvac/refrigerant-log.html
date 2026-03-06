@@ -320,37 +320,33 @@
 
             <section class="wizard-step hidden" data-step="8">
               <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <label
-                  for="refLeakSuspected"
-                  class="block text-sm font-semibold text-white"
-                  >Leak Suspected</label
-                >
-                <div class="relative mt-3">
-                  <select
-                    id="refLeakSuspected"
-                    name="leakSuspected"
-                    class="block w-full appearance-none rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 pr-12 text-base text-white outline-none focus:border-cyan-400"
+                <label class="block text-sm font-semibold text-white">
+                  Leak Suspected
+                </label>
+
+                <input
+                  id="refLeakSuspected"
+                  name="leakSuspected"
+                  type="hidden"
+                  value=""
+                />
+
+                <div class="mt-3 grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    class="leakChoiceBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-base font-bold text-white"
+                    data-value="Yes"
                   >
-                    <option value="">Select option</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                  <div
-                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-white/50"
+                    Yes
+                  </button>
+
+                  <button
+                    type="button"
+                    class="leakChoiceBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-base font-bold text-white"
+                    data-value="No"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.51a.75.75 0 01-1.08 0l-4.25-4.51a.75.75 0 01.02-1.06z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
+                    No
+                  </button>
                 </div>
               </div>
             </section>

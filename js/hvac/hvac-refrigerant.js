@@ -235,6 +235,33 @@ function bindDraftAutosave () {
   })
 }
 
+function bindLeakChoiceButtons () {
+  const hiddenInput = byId('refLeakSuspected')
+  const buttons = Array.from(document.querySelectorAll('.leakChoiceBtn'))
+
+  if (!hiddenInput || !buttons.length) return
+
+  function render () {
+    buttons.forEach(btn => {
+      const active = btn.dataset.value === hiddenInput.value
+
+      btn.className = active
+        ? 'leakChoiceBtn rounded-2xl border border-cyan-400/30 bg-cyan-500/15 px-4 py-4 text-base font-bold text-cyan-200'
+        : 'leakChoiceBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-base font-bold text-white'
+    })
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      hiddenInput.value = btn.dataset.value || ''
+      saveDraft()
+      render()
+    })
+  })
+
+  render()
+}
+
 function showStepError (message, id) {
   showError(errorBox, message)
   byId(id)?.focus()
@@ -550,6 +577,7 @@ populateSystemTypes()
 populateRefrigerantTypes()
 loadDraft()
 bindDraftAutosave()
+bindLeakChoiceButtons()
 wizard.setCurrentStep(loadCurrentStep())
 syncEditModeUi()
 updateQueueStatus()

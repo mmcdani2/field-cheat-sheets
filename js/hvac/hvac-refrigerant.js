@@ -55,6 +55,14 @@ function ouncesToDecimalPounds (lbs, oz) {
   return Number((lbs + oz / 16).toFixed(2))
 }
 
+function generateSubmissionId () {
+  if (window.crypto?.randomUUID) {
+    return window.crypto.randomUUID()
+  }
+
+  return `sub_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
+}
+
 function populateStates () {
   const select = byId('refState')
   if (!select) return
@@ -93,7 +101,11 @@ function getPayload () {
     getNum('refRecoveredOz')
   )
 
+  const existingDraft = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}')
+  const submissionId = existingDraft.submissionId || generateSubmissionId()
+
   return {
+    submissionId,
     techName: getFieldValue('refTech'),
     jobNumber: getFieldValue('refJobNumber'),
     customerName: getFieldValue('refCustomer'),
@@ -110,6 +122,8 @@ function getPayload () {
 
 function getDraftData () {
   return {
+    submissionId:
+      JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}')?.submissionId || '',
     refTech: byId('refTech')?.value ?? '',
     refJobNumber: byId('refJobNumber')?.value ?? '',
     refCustomer: byId('refCustomer')?.value ?? '',

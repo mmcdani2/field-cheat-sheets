@@ -102,6 +102,7 @@ function payloadToDraft (payload = {}) {
   const recoveredOz = Number(((recoveredTotal - recoveredLbs) * 16).toFixed(1))
 
   return {
+    submissionId: payload.submissionId || '',
     refTech: payload.techName || '',
     refJobNumber: payload.jobNumber || '',
     refCustomer: payload.customerName || '',

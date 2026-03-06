@@ -15,6 +15,8 @@ const WEB_APP_URL =
   'https://script.google.com/macros/s/AKfycby-mLUIwoSTYPerbvQTmA578AQYiaj0lrG--dxQMytHn3H0a90OnltOY1DWETDjYeTi/exec'
 
 const MODULE_KEY = 'refrigerant-log'
+const DRAFT_KEY = 'fieldRef.refrigerantLogDraft'
+const STEP_KEY = 'fieldRef.refrigerantLogStep'
 
 const steps = Array.from(document.querySelectorAll('.wizard-step'))
 const progressEl = byId('wizardProgress')
@@ -30,27 +32,27 @@ const queueIndicatorText = byId('queueIndicatorText')
 
 let statusTimer = null
 
-function getFieldValue (id) {
+function getFieldValue(id) {
   return byId(id)?.value?.trim() || ''
 }
 
-function getNum (id) {
+function getNum(id) {
   const raw = byId(id)?.value ?? ''
   const n = Number.parseFloat(raw)
   return Number.isFinite(n) ? n : 0
 }
 
-function ouncesToDecimalPounds (lbs, oz) {
+function ouncesToDecimalPounds(lbs, oz) {
   return Number((lbs + oz / 16).toFixed(2))
 }
 
-function populateStates () {
+function populateStates() {
   const select = byId('refState')
   if (!select) return
 
   populateSelect(
     select,
-    STATES.map(state => ({
+    STATES.map((state) => ({
       value: state.code,
       label: state.name
     })),
@@ -58,21 +60,21 @@ function populateStates () {
   )
 }
 
-function populateSystemTypes () {
+function populateSystemTypes() {
   const select = byId('refEquipmentType')
   if (!select) return
 
   populateSelect(select, SYSTEM_TYPES, 'Select equipment type')
 }
 
-function populateRefrigerantTypes () {
+function populateRefrigerantTypes() {
   const select = byId('refRefrigerantType')
   if (!select) return
 
   populateSelect(select, REFRIGERANT_TYPES, 'Select refrigerant type')
 }
 
-function getPayload () {
+function getPayload() {
   const poundsAdded = ouncesToDecimalPounds(
     getNum('refAddedLbs'),
     getNum('refAddedOz')
@@ -97,13 +99,100 @@ function getPayload () {
   }
 }
 
-function showStepError (message, id) {
+function getDraftData() {
+  return {
+    refTech: byId('refTech')?.value ?? '',
+    refJobNumber: byId('refJobNumber')?.value ?? '',
+    refCustomer: byId('refCustomer')?.value ?? '',
+    refCity: byId('refCity')?.value ?? '',
+    refState: byId('refState')?.value ?? '',
+    refEquipmentType: byId('refEquipmentType')?.value ?? '',
+    refRefrigerantType: byId('refRefrigerantType')?.value ?? '',
+    refAddedLbs: byId('refAddedLbs')?.value ?? '',
+    refAddedOz: byId('refAddedOz')?.value ?? '',
+    refRecoveredLbs: byId('refRecoveredLbs')?.value ?? '',
+    refRecoveredOz: byId('refRecoveredOz')?.value ?? '',
+    refLeakSuspected: byId('refLeakSuspected')?.value ?? '',
+    refNotes: byId('refNotes')?.value ?? ''
+  }
+}
+
+function saveDraft() {
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(getDraftData()))
+}
+
+function loadDraft() {
+  const raw = localStorage.getItem(DRAFT_KEY)
+  if (!raw) return
+
+  try {
+    const draft = JSON.parse(raw)
+
+    Object.entries(draft).forEach(([id, value]) => {
+      const el = byId(id)
+      if (!el) return
+      el.value = value ?? ''
+    })
+  } catch (err) {
+    console.error('Failed to load refrigerant draft:', err)
+  }
+}
+
+function clearDraft() {
+  localStorage.removeItem(DRAFT_KEY)
+}
+
+function saveCurrentStep(stepIndex) {
+  localStorage.setItem(STEP_KEY, String(stepIndex))
+}
+
+function loadCurrentStep() {
+  const raw = localStorage.getItem(STEP_KEY)
+  const step = Number.parseInt(raw ?? '0', 10)
+
+  if (!Number.isInteger(step)) return 0
+  if (step < 0) return 0
+  if (step > steps.length - 1) return 0
+
+  return step
+}
+
+function clearCurrentStep() {
+  localStorage.removeItem(STEP_KEY)
+}
+
+function bindDraftAutosave() {
+  const ids = [
+    'refTech',
+    'refJobNumber',
+    'refCustomer',
+    'refCity',
+    'refState',
+    'refEquipmentType',
+    'refRefrigerantType',
+    'refAddedLbs',
+    'refAddedOz',
+    'refRecoveredLbs',
+    'refRecoveredOz',
+    'refLeakSuspected',
+    'refNotes'
+  ]
+
+  ids.forEach((id) => {
+    const el = byId(id)
+    if (!el) return
+    el.addEventListener('input', saveDraft)
+    el.addEventListener('change', saveDraft)
+  })
+}
+
+function showStepError(message, id) {
   showError(errorBox, message)
   byId(id)?.focus()
   return false
 }
 
-function showTimedStatus (message, ok = true, ms = 4000) {
+function showTimedStatus(message, ok = true, ms = 4000) {
   if (statusTimer) {
     clearTimeout(statusTimer)
     statusTimer = null
@@ -117,7 +206,7 @@ function showTimedStatus (message, ok = true, ms = 4000) {
   }, ms)
 }
 
-function validateStep (stepIndex) {
+function validateStep(stepIndex) {
   if (stepIndex === 0 && !getFieldValue('refTech')) {
     return showStepError('Tech Name is required.', 'refTech')
   }
@@ -189,7 +278,7 @@ function validateStep (stepIndex) {
   return true
 }
 
-function renderReview () {
+function renderReview() {
   if (!reviewList) return
 
   const payload = getPayload()
@@ -219,7 +308,7 @@ function renderReview () {
     .join('')
 }
 
-function setQueueIndicator (count) {
+function setQueueIndicator(count) {
   if (!queueIndicator || !queueIndicatorText) return
 
   if (count > 0) {
@@ -232,12 +321,12 @@ function setQueueIndicator (count) {
   queueIndicatorText.textContent = ''
 }
 
-async function updateQueueStatus () {
+async function updateQueueStatus() {
   const count = await getQueueCount(MODULE_KEY)
   setQueueIndicator(count)
 }
 
-async function postPayload (payload, endpoint = WEB_APP_URL) {
+async function postPayload(payload, endpoint = WEB_APP_URL) {
   const res = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -253,26 +342,24 @@ async function postPayload (payload, endpoint = WEB_APP_URL) {
   return data
 }
 
-async function tryFlushQueue () {
+async function tryFlushQueue() {
   const result = await flushQueue({
     module: MODULE_KEY,
-    submitFn: async item => {
+    submitFn: async (item) => {
       await postPayload(item.payload, item.endpoint)
     }
   })
 
   if (!result.skipped && result.sent > 0) {
     showTimedStatus(
-      `${result.sent} queued submission${
-        result.sent === 1 ? '' : 's'
-      } synced successfully.`
+      `${result.sent} queued submission${result.sent === 1 ? '' : 's'} synced successfully.`
     )
   }
 
   await updateQueueStatus()
 }
 
-async function submitLog () {
+async function submitLog() {
   const payload = getPayload()
 
   clearStatus(statusBox)
@@ -292,6 +379,8 @@ async function submitLog () {
         'No connection. Log saved locally and will sync when online.'
       )
       formEl?.reset()
+      clearDraft()
+      clearCurrentStep()
       populateStates()
       populateSystemTypes()
       populateRefrigerantTypes()
@@ -304,6 +393,8 @@ async function submitLog () {
 
     showTimedStatus('Log submitted successfully.')
     formEl?.reset()
+    clearDraft()
+    clearCurrentStep()
     populateStates()
     populateSystemTypes()
     populateRefrigerantTypes()
@@ -319,13 +410,13 @@ async function submitLog () {
 
     showStatus(
       statusBox,
-      `Submit failed live. Log saved locally and will retry when online. (${String(
-        err
-      )})`,
+      `Submit failed live. Log saved locally and will retry when online. (${String(err)})`,
       false
     )
 
     formEl?.reset()
+    clearDraft()
+    clearCurrentStep()
     populateStates()
     populateSystemTypes()
     populateRefrigerantTypes()
@@ -344,7 +435,9 @@ const wizard = createWizard({
   nextBtn,
   backBtn,
   errorBox,
-  onRenderStep: stepIndex => {
+  onRenderStep: (stepIndex) => {
+    saveCurrentStep(stepIndex)
+
     if (stepIndex === steps.length - 1) {
       renderReview()
     }
@@ -362,6 +455,8 @@ window.addEventListener('online', () => {
 populateStates()
 populateSystemTypes()
 populateRefrigerantTypes()
-wizard.renderStep()
+loadDraft()
+bindDraftAutosave()
+wizard.setCurrentStep(loadCurrentStep())
 updateQueueStatus()
 tryFlushQueue()

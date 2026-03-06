@@ -360,17 +360,17 @@ function renderReview () {
   const payload = getPayload()
 
   const items = [
-    ['Tech Name', payload.techName],
-    ['Housecall Pro Job #', payload.jobNumber],
-    ['Customer Name', payload.customerName],
-    ['City / State', `${payload.city}, ${payload.state}`],
-    ['Equipment Type', payload.equipmentType],
-    ['Refrigerant Type', payload.refrigerantType],
-    ['Added', `${payload.poundsAdded} lb`],
-    ['Recovered', `${payload.poundsRecovered} lb`],
-    ['Leak Suspected', payload.leakSuspected],
-    ['Notes', payload.notes || '—']
-  ]
+  ['Tech', payload.techName],
+  ['Job #', payload.jobNumber],
+  ['Customer', payload.customerName],
+  ['City / State', `${payload.city}, ${payload.state}`],
+  ['Equipment', payload.equipmentType],
+  ['Refrigerant', payload.refrigerantType],
+  ['Added', `${payload.poundsAdded} lb`],
+  ['Recovered', `${payload.poundsRecovered} lb`],
+  ['Leak', payload.leakSuspected],
+  ['Notes', payload.notes || '—']
+]
 
   reviewList.innerHTML = items
     .map(

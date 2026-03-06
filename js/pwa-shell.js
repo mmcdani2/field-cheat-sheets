@@ -2,11 +2,11 @@ const OFFLINE_READY_KEY = 'fieldRef.offlineReadySeen'
 
 let deferredPrompt = null
 
-function byId(id) {
+function byId (id) {
   return document.getElementById(id)
 }
 
-function setConnectionState() {
+function setConnectionState () {
   const dot = byId('pwaConnectionDot')
   const text = byId('pwaConnectionText')
   if (!dot || !text) return
@@ -20,7 +20,7 @@ function setConnectionState() {
   }
 }
 
-function showBanner(message, type = 'info') {
+function showBanner (message, type = 'info') {
   const el = byId('pwaBanner')
   const text = byId('pwaBannerText')
   if (!el || !text) return
@@ -41,27 +41,27 @@ function showBanner(message, type = 'info') {
   el.classList.remove('hidden')
 }
 
-function hideBanner() {
+function hideBanner () {
   const el = byId('pwaBanner')
   if (!el) return
   el.classList.add('hidden')
 }
 
-function showInstallButton() {
+function showInstallButton () {
   byId('installAppBtn')?.classList.remove('hidden')
 }
 
-function hideInstallButton() {
+function hideInstallButton () {
   byId('installAppBtn')?.classList.add('hidden')
 }
 
-function bindBannerDismiss() {
+function bindBannerDismiss () {
   byId('dismissPwaBannerBtn')?.addEventListener('click', () => {
     hideBanner()
   })
 }
 
-function bindInstallButton() {
+function bindInstallButton () {
   byId('installAppBtn')?.addEventListener('click', async () => {
     if (!deferredPrompt) {
       showBanner('Use your browser menu to install the app.', 'warn')
@@ -76,27 +76,30 @@ function bindInstallButton() {
   })
 }
 
-function maybeShowOfflineReady() {
+function maybeShowOfflineReady () {
   if (localStorage.getItem(OFFLINE_READY_KEY) === '1') return
 
   showBanner('Offline mode ready.', 'success')
   localStorage.setItem(OFFLINE_READY_KEY, '1')
 }
 
-function registerServiceWorker() {
-  if (!('serviceWorker' in navigator)) return
-
-  window.addEventListener('load', async () => {
-    try {
-      await navigator.serviceWorker.register('/sw.js')
-      maybeShowOfflineReady()
-    } catch (err) {
-      console.error('SW registration failed:', err)
-    }
-  })
+function registerServiceWorker () {
+  if (
+    'serviceWorker' in navigator &&
+    location.hostname !== 'localhost' &&
+    location.hostname !== '127.0.0.1'
+  ) {
+    window.addEventListener('load', async () => {
+      try {
+        await navigator.serviceWorker.register('/sw.js')
+      } catch (err) {
+        console.error('SW registration failed:', err)
+      }
+    })
+  }
 }
 
-window.addEventListener('beforeinstallprompt', (event) => {
+window.addEventListener('beforeinstallprompt', event => {
   event.preventDefault()
   deferredPrompt = event
   showInstallButton()

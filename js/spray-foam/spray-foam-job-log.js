@@ -32,13 +32,14 @@ const queueIndicator = byId("queueIndicator");
 const queueIndicatorText = byId("queueIndicatorText");
 const viewQueuedBtn = byId("viewQueuedBtn");
 const editQueueBanner = byId("editQueueBanner");
-const addFoamEntryBtn = byId("addFoamEntryBtn");
-const foamEntriesWrap = byId("sfFoamEntries");
-const foamEntryTemplate = byId("foamEntryTemplate");
+
+const addProductBtn = byId("addProductBtn");
+const savedProductsWrap = byId("sfSavedProducts");
+const savedProductCardTemplate = byId("savedProductCardTemplate");
 
 let wizard = null;
 let statusTimer = null;
-let foamEntryIdCounter = 0;
+let savedProducts = [];
 
 function getText(id) {
   return byId(id)?.value?.trim() || "";
@@ -58,41 +59,9 @@ function generateSubmissionId() {
   return `sf_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function generateFoamEntryId() {
-  foamEntryIdCounter += 1;
-  return `foam_${Date.now()}_${foamEntryIdCounter}`;
-}
-
-function showTimedStatus(message, ok = true, ms = 4000) {
-  if (statusTimer) {
-    clearTimeout(statusTimer);
-    statusTimer = null;
-  }
-
-  showStatus(statusBox, message, ok);
-
-  statusTimer = setTimeout(() => {
-    clearStatus(statusBox);
-    statusTimer = null;
-  }, ms);
-}
-
-function showStepError(message, id) {
-  showError(errorBox, message);
-  byId(id)?.focus();
-  return false;
-}
-
-function setQueueIndicator(count) {
-  if (!queueIndicator || !queueIndicatorText) return;
-
-  if (count > 0) {
-    queueIndicator.classList.remove("hidden");
-    queueIndicatorText.textContent = `${count} queued for sync`;
-  } else {
-    queueIndicator.classList.add("hidden");
-    queueIndicatorText.textContent = "";
-  }
+function generateProductId() {
+  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+  return `prod_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
 function getEditingQueueId() {
@@ -121,6 +90,38 @@ function clearCurrentStep() {
   localStorage.removeItem(STEP_KEY);
 }
 
+function showTimedStatus(message, ok = true, ms = 4000) {
+  if (statusTimer) {
+    clearTimeout(statusTimer);
+    statusTimer = null;
+  }
+
+  showStatus(statusBox, message, ok);
+
+  statusTimer = setTimeout(() => {
+    clearStatus(statusBox);
+    statusTimer = null;
+  }, ms);
+}
+
+function showStepError(message, id) {
+  showError(errorBox, message);
+  if (id) byId(id)?.focus();
+  return false;
+}
+
+function setQueueIndicator(count) {
+  if (!queueIndicator || !queueIndicatorText) return;
+
+  if (count > 0) {
+    queueIndicator.classList.remove("hidden");
+    queueIndicatorText.textContent = `${count} queued for sync`;
+  } else {
+    queueIndicator.classList.add("hidden");
+    queueIndicatorText.textContent = "";
+  }
+}
+
 function syncEditModeUi() {
   const editingId = getEditingQueueId();
 
@@ -132,6 +133,8 @@ function syncEditModeUi() {
 
   if (wizard.getCurrentStep() === steps.length - 1) {
     nextBtn.textContent = editingId ? "Save Changes" : "Submit Log";
+  } else {
+    nextBtn.textContent = "Next";
   }
 }
 
@@ -158,123 +161,249 @@ function bindYesNoButtons() {
       const targetId = btn.dataset.target;
       const value = btn.dataset.value || "";
       const hiddenInput = byId(targetId);
-
       if (!hiddenInput) return;
 
       hiddenInput.value = value;
       setYesNoButtonState(targetId);
       saveDraft();
+      renderReview();
     });
   });
 
   const targets = new Set(
     buttons.map((btn) => btn.dataset.target).filter(Boolean),
   );
-
   targets.forEach((targetId) => setYesNoButtonState(targetId));
 }
 
-function createFoamEntryElement(entry = {}) {
-  if (!foamEntryTemplate || !foamEntriesWrap) return null;
+function bindSimpleFieldAutosave() {
+  const ids = [
+    "sfDate",
+    "sfJobNumber",
+    "sfCustomerName",
+    "sfCity",
+    "sfTech",
+    "sfHelperCrew",
+    "sfPhotosUploaded",
+    "sfJobNotes",
+    "sfAmbientTemp",
+    "sfSubstrateTemp",
+    "sfHumidity",
+    "sfHoseTemp",
+    "sfPressure",
+    "sfDowntime",
+    "sfWasteGallons",
+    "sfWasteNotes",
+    "sfProductCategory",
+    "sfOtherProductType",
+    "sfProductBrandName",
+    "sfSetLotNumber",
+    "sfSetsUsed",
+    "sfAvgThickness",
+    "sfInstalledArea",
+  ];
 
-  const fragment = foamEntryTemplate.content.cloneNode(true);
-  const root = fragment.querySelector(".foam-entry");
-  if (!root) return null;
+  ids.forEach((id) => {
+    const el = byId(id);
+    if (!el) return;
+    el.addEventListener("input", () => {
+      saveDraft();
+      renderReview();
+    });
+    el.addEventListener("change", () => {
+      saveDraft();
+      renderReview();
+    });
+  });
+}
 
-  root.dataset.entryId = entry.entryId || generateFoamEntryId();
+function bindProductCategoryToggle() {
+  const categoryEl = byId("sfProductCategory");
+  const otherWrap = byId("sfOtherProductWrap");
+  const otherInput = byId("sfOtherProductType");
 
-  const categoryEl = root.querySelector(".foam-category");
-  const otherWrap = root.querySelector(".foam-other-wrap");
-  const otherTypeEl = root.querySelector(".foam-other-type");
-  const brandEl = root.querySelector(".foam-brand");
-  const lotEl = root.querySelector(".foam-lot");
-  const setsUsedEl = root.querySelector(".foam-sets-used");
-  const thicknessEl = root.querySelector(".foam-thickness");
-  const areaEl = root.querySelector(".foam-area");
-  const removeBtn = root.querySelector(".removeFoamEntryBtn");
+  if (!categoryEl || !otherWrap) return;
 
-  categoryEl.value = entry.category || "";
-  otherTypeEl.value = entry.otherType || "";
-  brandEl.value = entry.brandName || "";
-  lotEl.value = entry.lotNumber || "";
-  setsUsedEl.value =
-    entry.setsUsed !== undefined && entry.setsUsed !== null
-      ? String(entry.setsUsed)
-      : "";
-  thicknessEl.value =
-    entry.avgThickness !== undefined && entry.avgThickness !== null
-      ? String(entry.avgThickness)
-      : "";
-  areaEl.value =
-    entry.installedAreaSqFt !== undefined && entry.installedAreaSqFt !== null
-      ? String(entry.installedAreaSqFt)
-      : "";
-
-  function syncOtherVisibility() {
+  const sync = () => {
     const isOther = categoryEl.value === "Other";
     otherWrap.classList.toggle("hidden", !isOther);
-    if (!isOther) {
-      otherTypeEl.value = "";
-    }
-  }
-
-  categoryEl.addEventListener("change", () => {
-    syncOtherVisibility();
-    saveDraft();
-  });
-  [otherTypeEl, brandEl, lotEl, setsUsedEl, thicknessEl, areaEl].forEach(
-    (el) => {
-      el.addEventListener("input", saveDraft);
-      el.addEventListener("change", saveDraft);
-    },
-  );
-
-  removeBtn?.addEventListener("click", () => {
-    root.remove();
+    if (!isOther && otherInput) otherInput.value = "";
     saveDraft();
     renderReview();
-  });
+  };
 
-  syncOtherVisibility();
-  return root;
+  categoryEl.addEventListener("change", sync);
+  sync();
 }
 
-function addFoamEntry(entry = {}) {
-  const el = createFoamEntryElement(entry);
-  if (!el || !foamEntriesWrap) return;
-  foamEntriesWrap.appendChild(el);
+function getCurrentProductDraft() {
+  return {
+    id: null,
+    productCategory: getText("sfProductCategory"),
+    otherProductType: getText("sfOtherProductType"),
+    productBrandName: getText("sfProductBrandName"),
+    setLotNumber: getText("sfSetLotNumber"),
+    setsUsed: getNum("sfSetsUsed"),
+    installedAreaSqFt: getNum("sfInstalledArea"),
+    averageThicknessIn: getNum("sfAvgThickness"),
+  };
+}
+
+function currentProductHasAnyData() {
+  const p = getCurrentProductDraft();
+  return Boolean(
+    p.productCategory ||
+    p.otherProductType ||
+    p.productBrandName ||
+    p.setLotNumber ||
+    p.setsUsed > 0 ||
+    p.installedAreaSqFt > 0 ||
+    p.averageThicknessIn > 0,
+  );
+}
+
+function validateProduct(product, prefix = "Current Product") {
+  if (!product.productCategory) {
+    showError(errorBox, `${prefix}: Product Category is required.`);
+    byId("sfProductCategory")?.focus();
+    return false;
+  }
+
+  if (product.productCategory === "Other" && !product.otherProductType) {
+    showError(errorBox, `${prefix}: Other Product Type is required.`);
+    byId("sfOtherProductType")?.focus();
+    return false;
+  }
+
+  if (!product.productBrandName) {
+    showError(errorBox, `${prefix}: Product Brand / Name is required.`);
+    byId("sfProductBrandName")?.focus();
+    return false;
+  }
+
+  if (!product.setLotNumber) {
+    showError(errorBox, `${prefix}: Set / Lot # is required.`);
+    byId("sfSetLotNumber")?.focus();
+    return false;
+  }
+
+  if (product.setsUsed <= 0) {
+    showError(errorBox, `${prefix}: Sets Used must be greater than 0.`);
+    byId("sfSetsUsed")?.focus();
+    return false;
+  }
+
+  if (product.installedAreaSqFt <= 0) {
+    showError(errorBox, `${prefix}: Installed Area must be greater than 0.`);
+    byId("sfInstalledArea")?.focus();
+    return false;
+  }
+
+  if (product.averageThicknessIn <= 0) {
+    showError(errorBox, `${prefix}: Avg Thickness must be greater than 0.`);
+    byId("sfAvgThickness")?.focus();
+    return false;
+  }
+
+  return true;
+}
+
+function clearCurrentProductFields() {
+  const ids = [
+    "sfProductCategory",
+    "sfOtherProductType",
+    "sfProductBrandName",
+    "sfSetLotNumber",
+    "sfSetsUsed",
+    "sfAvgThickness",
+    "sfInstalledArea",
+  ];
+
+  ids.forEach((id) => {
+    const el = byId(id);
+    if (el) el.value = "";
+  });
+
+  byId("sfOtherProductWrap")?.classList.add("hidden");
+}
+
+function formatProductTitle(product) {
+  if (product.productCategory === "Other" && product.otherProductType) {
+    return `Other - ${product.otherProductType}`;
+  }
+  return product.productCategory || "Product";
+}
+
+function renderSavedProducts() {
+  if (!savedProductsWrap) return;
+  savedProductsWrap.innerHTML = "";
+
+  if (!savedProducts.length) {
+    savedProductsWrap.innerHTML = `
+      <div class="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white/55">
+        No saved products yet.
+      </div>
+    `;
+    return;
+  }
+
+  savedProducts.forEach((product) => {
+    const fragment = savedProductCardTemplate.content.cloneNode(true);
+    const card = fragment.querySelector(".saved-product-card");
+    const title = fragment.querySelector(".saved-product-title");
+    const meta = fragment.querySelector(".saved-product-meta");
+    const removeBtn = fragment.querySelector(".removeSavedProductBtn");
+
+    card.dataset.productId = product.id;
+    title.textContent = formatProductTitle(product);
+    meta.innerHTML = `
+      Brand: ${product.productBrandName || "—"}<br />
+      Lot: ${product.setLotNumber || "—"}<br />
+      Sets: ${product.setsUsed || 0} · Area: ${product.installedAreaSqFt || 0} sq ft · Thickness: ${product.averageThicknessIn || 0} in
+    `;
+
+    removeBtn?.addEventListener("click", () => {
+      savedProducts = savedProducts.filter((p) => p.id !== product.id);
+      renderSavedProducts();
+      saveDraft();
+      renderReview();
+    });
+
+    savedProductsWrap.appendChild(fragment);
+  });
+}
+
+function getAllProductsForSubmission({ includeCurrentDraft = true } = {}) {
+  const products = [...savedProducts];
+
+  if (includeCurrentDraft && currentProductHasAnyData()) {
+    const current = getCurrentProductDraft();
+    products.push({
+      id: generateProductId(),
+      ...current,
+    });
+  }
+
+  return products;
+}
+
+function addCurrentProductToSaved() {
+  const current = getCurrentProductDraft();
+
+  if (!validateProduct(current)) return false;
+
+  savedProducts.push({
+    id: generateProductId(),
+    ...current,
+  });
+
+  clearCurrentProductFields();
+  renderSavedProducts();
+  saveDraft();
   renderReview();
-}
-
-function getFoamEntries() {
-  return Array.from(document.querySelectorAll(".foam-entry")).map((entryEl) => {
-    const category =
-      entryEl.querySelector(".foam-category")?.value?.trim() || "";
-    const otherType =
-      entryEl.querySelector(".foam-other-type")?.value?.trim() || "";
-    const brandName = entryEl.querySelector(".foam-brand")?.value?.trim() || "";
-    const lotNumber = entryEl.querySelector(".foam-lot")?.value?.trim() || "";
-    const setsUsed = getNumberFromValue(
-      entryEl.querySelector(".foam-sets-used")?.value ?? "",
-    );
-    const avgThickness = getNumberFromValue(
-      entryEl.querySelector(".foam-thickness")?.value ?? "",
-    );
-    const installedAreaSqFt = getNumberFromValue(
-      entryEl.querySelector(".foam-area")?.value ?? "",
-    );
-
-    return {
-      entryId: entryEl.dataset.entryId || generateFoamEntryId(),
-      category,
-      otherType,
-      brandName,
-      lotNumber,
-      setsUsed,
-      avgThickness,
-      installedAreaSqFt,
-    };
-  });
+  showTimedStatus("Product added.");
+  byId("sfProductCategory")?.focus();
+  return true;
 }
 
 function getDraftData() {
@@ -297,7 +426,14 @@ function getDraftData() {
     sfDowntime: byId("sfDowntime")?.value ?? "",
     sfWasteGallons: byId("sfWasteGallons")?.value ?? "",
     sfWasteNotes: byId("sfWasteNotes")?.value ?? "",
-    foamEntries: getFoamEntries(),
+    sfProductCategory: byId("sfProductCategory")?.value ?? "",
+    sfOtherProductType: byId("sfOtherProductType")?.value ?? "",
+    sfProductBrandName: byId("sfProductBrandName")?.value ?? "",
+    sfSetLotNumber: byId("sfSetLotNumber")?.value ?? "",
+    sfSetsUsed: byId("sfSetsUsed")?.value ?? "",
+    sfAvgThickness: byId("sfAvgThickness")?.value ?? "",
+    sfInstalledArea: byId("sfInstalledArea")?.value ?? "",
+    savedProducts,
   };
 }
 
@@ -308,14 +444,14 @@ function saveDraft() {
 function loadDraft() {
   const raw = localStorage.getItem(DRAFT_KEY);
   if (!raw) {
-    if (!foamEntriesWrap?.children.length) addFoamEntry();
+    renderSavedProducts();
     return;
   }
 
   try {
     const draft = JSON.parse(raw);
 
-    const simpleFieldIds = [
+    const ids = [
       "sfDate",
       "sfJobNumber",
       "sfCustomerName",
@@ -332,26 +468,30 @@ function loadDraft() {
       "sfDowntime",
       "sfWasteGallons",
       "sfWasteNotes",
+      "sfProductCategory",
+      "sfOtherProductType",
+      "sfProductBrandName",
+      "sfSetLotNumber",
+      "sfSetsUsed",
+      "sfAvgThickness",
+      "sfInstalledArea",
     ];
 
-    simpleFieldIds.forEach((id) => {
+    ids.forEach((id) => {
       const el = byId(id);
       if (!el) return;
       el.value = draft[id] ?? "";
     });
 
-    if (foamEntriesWrap) {
-      foamEntriesWrap.innerHTML = "";
-
-      if (Array.isArray(draft.foamEntries) && draft.foamEntries.length) {
-        draft.foamEntries.forEach((entry) => addFoamEntry(entry));
-      } else {
-        addFoamEntry();
-      }
-    }
+    savedProducts = Array.isArray(draft.savedProducts)
+      ? draft.savedProducts
+      : [];
+    renderSavedProducts();
+    bindProductCategoryToggle();
   } catch (err) {
     console.error("Failed to load spray foam draft:", err);
-    if (!foamEntriesWrap?.children.length) addFoamEntry();
+    savedProducts = [];
+    renderSavedProducts();
   }
 }
 
@@ -359,16 +499,12 @@ function clearDraft() {
   localStorage.removeItem(DRAFT_KEY);
 }
 
-function formatProductLabel(entry) {
-  if (entry.category === "Other" && entry.otherType) {
-    return `Other - ${entry.otherType}`;
-  }
-  return entry.category || "—";
-}
-
 function getPayload() {
   const existingDraft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
   const submissionId = existingDraft.submissionId || generateSubmissionId();
+  const productEntries = getAllProductsForSubmission({
+    includeCurrentDraft: true,
+  });
 
   return {
     submissionId,
@@ -391,14 +527,15 @@ function getPayload() {
     wasteGallons: getNum("sfWasteGallons"),
     wasteReturnNotes: getText("sfWasteNotes"),
 
-    productEntries: getFoamEntries().map((entry) => ({
-      productCategory: entry.category,
-      otherProductType: entry.category === "Other" ? entry.otherType : "",
-      productBrandName: entry.brandName,
-      setLotNumber: entry.lotNumber,
-      setsUsed: entry.setsUsed,
-      installedAreaSqFt: entry.installedAreaSqFt,
-      averageThicknessIn: entry.avgThickness,
+    productEntries: productEntries.map((product) => ({
+      productCategory: product.productCategory,
+      otherProductType:
+        product.productCategory === "Other" ? product.otherProductType : "",
+      productBrandName: product.productBrandName,
+      setLotNumber: product.setLotNumber,
+      setsUsed: product.setsUsed,
+      installedAreaSqFt: product.installedAreaSqFt,
+      averageThicknessIn: product.averageThicknessIn,
     })),
   };
 }
@@ -408,7 +545,32 @@ function renderReview() {
 
   const payload = getPayload();
 
-  const productHtml = payload.productEntries.length
+  const infoItems = [
+    ["Date", payload.date || "—"],
+    ["Job #", payload.jobNumber || "—"],
+    ["Customer / Site", payload.customerName || "—"],
+    ["City", payload.city || "—"],
+    ["Sprayer", payload.sprayer || "—"],
+    ["Helper / Crew", payload.helperCrew || "—"],
+    ["Photos uploaded to HCP?", payload.photosUploadedToHcp || "—"],
+    ["Ambient Temp", payload.ambientTempF ? `${payload.ambientTempF} °F` : "—"],
+    [
+      "Substrate Temp",
+      payload.substrateTempF ? `${payload.substrateTempF} °F` : "—",
+    ],
+    ["Humidity", payload.humidityPercent ? `${payload.humidityPercent}%` : "—"],
+    ["Hose Temp", payload.hoseTempF ? `${payload.hoseTempF} °F` : "—"],
+    ["Pressure", payload.pressurePsi ? `${payload.pressurePsi} psi` : "—"],
+    ["Downtime", payload.downtime || "—"],
+    [
+      "Waste",
+      byId("sfWasteGallons")?.value ? `${payload.wasteGallons} gal` : "—",
+    ],
+    ["Waste / Return Notes", payload.wasteReturnNotes || "—"],
+    ["Other Notes", payload.otherNotes || "—"],
+  ];
+
+  const productsHtml = payload.productEntries.length
     ? payload.productEntries
         .map(
           (entry, idx) => `
@@ -433,35 +595,13 @@ function renderReview() {
         )
         .join("")
     : `
-      <div class="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white/60">
-        No products added yet.
+      <div class="rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-sm text-white/55">
+        No products entered yet.
       </div>
     `;
 
-  const items = [
-    ["Date", payload.date || "—"],
-    ["Job #", payload.jobNumber || "—"],
-    ["Customer / Site", payload.customerName || "—"],
-    ["City", payload.city || "—"],
-    ["Sprayer", payload.sprayer || "—"],
-    ["Helper / Crew", payload.helperCrew || "—"],
-    ["Photos uploaded to HCP?", payload.photosUploadedToHcp || "—"],
-    ["Ambient Temp", payload.ambientTempF ? `${payload.ambientTempF} °F` : "—"],
-    [
-      "Substrate Temp",
-      payload.substrateTempF ? `${payload.substrateTempF} °F` : "—",
-    ],
-    ["Humidity", payload.humidityPercent ? `${payload.humidityPercent}%` : "—"],
-    ["Hose Temp", payload.hoseTempF ? `${payload.hoseTempF} °F` : "—"],
-    ["Pressure", payload.pressurePsi ? `${payload.pressurePsi} psi` : "—"],
-    ["Downtime", payload.downtime || "—"],
-    ["Waste", payload.wasteGallons ? `${payload.wasteGallons} gal` : "—"],
-    ["Waste / Return Notes", payload.wasteReturnNotes || "—"],
-    ["Other Notes", payload.otherNotes || "—"],
-  ];
-
   reviewList.innerHTML = `
-    ${items
+    ${infoItems
       .map(
         ([label, value]) => `
           <div class="rounded-xl border border-white/10 bg-neutral-900/70 px-4 py-3">
@@ -473,63 +613,9 @@ function renderReview() {
       .join("")}
     <div class="rounded-xl border border-white/10 bg-neutral-900/70 px-4 py-3">
       <div class="text-xs uppercase tracking-wide text-white/45">Products Used</div>
-      <div class="mt-3 space-y-3">${productHtml}</div>
+      <div class="mt-3 space-y-3">${productsHtml}</div>
     </div>
   `;
-}
-
-function validateProductEntries() {
-  const entries = getFoamEntries();
-
-  if (!entries.length) {
-    showError(errorBox, "Add at least one product entry.");
-    return false;
-  }
-
-  for (let i = 0; i < entries.length; i += 1) {
-    const entry = entries[i];
-    const label = `Product ${i + 1}`;
-
-    if (!entry.category) {
-      showError(errorBox, `${label}: Product Category is required.`);
-      return false;
-    }
-
-    if (entry.category === "Other" && !entry.otherType) {
-      showError(errorBox, `${label}: Other Product Type is required.`);
-      return false;
-    }
-
-    if (!entry.brandName) {
-      showError(errorBox, `${label}: Product Brand / Name is required.`);
-      return false;
-    }
-
-    if (!entry.lotNumber) {
-      showError(errorBox, `${label}: Set / Lot # is required.`);
-      return false;
-    }
-
-    if (entry.setsUsed <= 0) {
-      showError(errorBox, `${label}: Sets Used must be greater than 0.`);
-      return false;
-    }
-
-    if (entry.installedAreaSqFt <= 0) {
-      showError(errorBox, `${label}: Installed Area must be greater than 0.`);
-      return false;
-    }
-
-    if (entry.avgThickness <= 0) {
-      showError(
-        errorBox,
-        `${label}: Average Thickness must be greater than 0.`,
-      );
-      return false;
-    }
-  }
-
-  return true;
 }
 
 function validateStep(stepIndex) {
@@ -569,7 +655,21 @@ function validateStep(stepIndex) {
   }
 
   if (stepIndex === 2) {
-    return validateProductEntries();
+    const allProducts = getAllProductsForSubmission({
+      includeCurrentDraft: true,
+    });
+
+    if (!allProducts.length) {
+      showError(errorBox, "Enter at least one product before continuing.");
+      byId("sfProductCategory")?.focus();
+      return false;
+    }
+
+    if (currentProductHasAnyData()) {
+      return validateProduct(getCurrentProductDraft(), "Current Product");
+    }
+
+    return true;
   }
 
   return true;
@@ -577,14 +677,14 @@ function validateStep(stepIndex) {
 
 function resetFormUi() {
   formEl?.reset();
-  if (foamEntriesWrap) {
-    foamEntriesWrap.innerHTML = "";
-    addFoamEntry();
-  }
+  savedProducts = [];
+  renderSavedProducts();
+  clearCurrentProductFields();
   clearDraft();
   clearCurrentStep();
   clearEditingQueueId();
   bindYesNoButtons();
+  bindProductCategoryToggle();
   wizard.setCurrentStep(0);
   renderReview();
 }
@@ -704,41 +804,12 @@ async function submitLog() {
   }
 }
 
-function bindSimpleFieldAutosave() {
-  const ids = [
-    "sfDate",
-    "sfJobNumber",
-    "sfCustomerName",
-    "sfCity",
-    "sfTech",
-    "sfHelperCrew",
-    "sfPhotosUploaded",
-    "sfJobNotes",
-    "sfAmbientTemp",
-    "sfSubstrateTemp",
-    "sfHumidity",
-    "sfHoseTemp",
-    "sfPressure",
-    "sfDowntime",
-    "sfWasteGallons",
-    "sfWasteNotes",
-  ];
-
-  ids.forEach((id) => {
-    const el = byId(id);
-    if (!el) return;
-    el.addEventListener("input", saveDraft);
-    el.addEventListener("change", saveDraft);
-  });
-}
-
 viewQueuedBtn?.addEventListener("click", () => {
   showTimedStatus("Queued spray foam log view is not wired yet.", false);
 });
 
-addFoamEntryBtn?.addEventListener("click", () => {
-  addFoamEntry();
-  saveDraft();
+addProductBtn?.addEventListener("click", () => {
+  addCurrentProductToSaved();
 });
 
 window.addEventListener("online", () => {
@@ -770,7 +841,9 @@ wizard = createWizard({
 loadDraft();
 bindSimpleFieldAutosave();
 bindYesNoButtons();
+bindProductCategoryToggle();
 wizard.setCurrentStep(loadCurrentStep());
+renderSavedProducts();
 syncEditModeUi();
 renderReview();
 updateQueueStatus();

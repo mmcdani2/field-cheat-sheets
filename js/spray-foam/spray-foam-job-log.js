@@ -12,8 +12,10 @@ import {
   updateQueuedSubmission
 } from '../offline-queue.js'
 import { STATES } from '../data/states.js'
+import { FOAM_BRANDS } from '../data/foam-brands.js'
 
-const WEB_APP_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'
+const WEB_APP_URL =
+  'https://script.google.com/macros/s/AKfycbwSLBf_yLRXk3jK6_uiQOdVgiOt0I1uiQ0eRdiy_ZorWIH2-qiIfGuKqb5A0JOHIw-Q/exec'
 
 const MODULE_KEY = 'spray-foam-job-log'
 const DRAFT_KEY = 'fieldRef.sprayFoamJobLogDraft'
@@ -40,6 +42,10 @@ const savedProductCardTemplate = byId('savedProductCardTemplate')
 
 const jobSummaryBar = byId('jobSummaryBar')
 const jobSummaryText = byId('jobSummaryText')
+
+const submitSuccessCard = byId('submitSuccessCard')
+const submitSuccessSummary = byId('submitSuccessSummary')
+const newLogBtn = byId('newLogBtn')
 
 let wizard = null
 let statusTimer = null
@@ -201,7 +207,9 @@ function bindSimpleFieldAutosave () {
     'sfWasteNotes',
     'sfProductCategory',
     'sfOtherProductType',
-    'sfProductBrandName',
+    'sfManufacturer',
+    'sfOtherManufacturer',
+    'sfProductLine',
     'sfSetLotNumber',
     'sfSetsUsed',
     'sfAvgThickness',
@@ -241,12 +249,55 @@ function bindProductCategoryToggle () {
   sync()
 }
 
+function bindProductPresetButtons () {
+  const presetButtons = Array.from(
+    document.querySelectorAll('.productPresetBtn')
+  )
+  const categoryEl = byId('sfProductCategory')
+  const otherWrap = byId('sfOtherProductWrap')
+  const otherInput = byId('sfOtherProductType')
+  const brandInput = byId('sfProductBrandName')
+
+  if (!presetButtons.length || !categoryEl) return
+
+  presetButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category || ''
+      categoryEl.value = category
+
+      if (otherWrap) otherWrap.classList.add('hidden')
+      if (otherInput) otherInput.value = ''
+
+      presetButtons.forEach(b => {
+        const active = b === btn
+        b.className = active
+          ? 'productPresetBtn rounded-xl border border-amber-400/30 bg-amber-500/15 px-3 py-3 text-sm font-semibold text-amber-200'
+          : 'productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white'
+      })
+
+      saveDraft()
+      renderReview()
+      brandInput?.focus()
+    })
+  })
+
+  const current = categoryEl.value
+  if (current) {
+    const activeBtn = presetButtons.find(
+      btn => btn.dataset.category === current
+    )
+    if (activeBtn) activeBtn.click()
+  }
+}
+
 function getCurrentProductDraft () {
   return {
     id: null,
     productCategory: getText('sfProductCategory'),
     otherProductType: getText('sfOtherProductType'),
-    productBrandName: getText('sfProductBrandName'),
+    manufacturer: getText('sfManufacturer'),
+    otherManufacturer: getText('sfOtherManufacturer'),
+    productLine: getText('sfProductLine'),
     setLotNumber: getText('sfSetLotNumber'),
     setsUsed: getNum('sfSetsUsed'),
     installedAreaSqFt: getNum('sfInstalledArea'),
@@ -259,7 +310,9 @@ function currentProductHasAnyData () {
   return Boolean(
     p.productCategory ||
       p.otherProductType ||
-      p.productBrandName ||
+      p.manufacturer ||
+      p.otherManufacturer ||
+      p.productLine ||
       p.setLotNumber ||
       p.setsUsed > 0 ||
       p.installedAreaSqFt > 0 ||
@@ -280,9 +333,21 @@ function validateProduct (product, prefix = 'Current Product') {
     return false
   }
 
-  if (!product.productBrandName) {
-    showError(errorBox, `${prefix}: Product Brand / Name is required.`)
-    byId('sfProductBrandName')?.focus()
+  if (!product.manufacturer) {
+    showError(errorBox, `${prefix}: Manufacturer is required.`)
+    byId('sfManufacturer')?.focus()
+    return false
+  }
+
+  if (product.manufacturer === 'Other' && !product.otherManufacturer) {
+    showError(errorBox, `${prefix}: Other Manufacturer is required.`)
+    byId('sfOtherManufacturer')?.focus()
+    return false
+  }
+
+  if (!product.productLine) {
+    showError(errorBox, `${prefix}: Product Name / Line is required.`)
+    byId('sfProductLine')?.focus()
     return false
   }
 
@@ -317,7 +382,9 @@ function clearCurrentProductFields () {
   const ids = [
     'sfProductCategory',
     'sfOtherProductType',
-    'sfProductBrandName',
+    'sfManufacturer',
+    'sfOtherManufacturer',
+    'sfProductLine',
     'sfSetLotNumber',
     'sfSetsUsed',
     'sfAvgThickness',
@@ -330,6 +397,12 @@ function clearCurrentProductFields () {
   })
 
   byId('sfOtherProductWrap')?.classList.add('hidden')
+  byId('sfOtherManufacturerWrap')?.classList.add('hidden')
+
+  document.querySelectorAll('.productPresetBtn').forEach(btn => {
+    btn.className =
+      'productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white'
+  })
 }
 
 function formatProductTitle (product) {
@@ -371,12 +444,17 @@ function renderSavedProducts () {
     card.dataset.productId = product.id
     title.textContent = formatProductTitle(product)
     meta.innerHTML = `
-      Brand: ${product.productBrandName || '—'}<br />
-      Lot: ${product.setLotNumber || '—'}<br />
-      Sets: ${product.setsUsed || 0} · Area: ${
+  Manufacturer: ${
+    product.manufacturer === 'Other' && product.otherManufacturer
+      ? product.otherManufacturer
+      : product.manufacturer || '—'
+  }<br />
+  Product: ${product.productLine || '—'}<br />
+  Lot: ${product.setLotNumber || '—'}<br />
+  Sets: ${product.setsUsed || 0} · Area: ${
       product.installedAreaSqFt || 0
     } sq ft · Thickness: ${product.averageThicknessIn || 0} in
-    `
+`
 
     removeBtn?.addEventListener('click', () => {
       savedProducts = savedProducts.filter(p => p.id !== product.id)
@@ -445,7 +523,9 @@ function getDraftData () {
     sfWasteNotes: byId('sfWasteNotes')?.value ?? '',
     sfProductCategory: byId('sfProductCategory')?.value ?? '',
     sfOtherProductType: byId('sfOtherProductType')?.value ?? '',
-    sfProductBrandName: byId('sfProductBrandName')?.value ?? '',
+    sfManufacturer: byId('sfManufacturer')?.value ?? '',
+    sfOtherManufacturer: byId('sfOtherManufacturer')?.value ?? '',
+    sfProductLine: byId('sfProductLine')?.value ?? '',
     sfSetLotNumber: byId('sfSetLotNumber')?.value ?? '',
     sfSetsUsed: byId('sfSetsUsed')?.value ?? '',
     sfAvgThickness: byId('sfAvgThickness')?.value ?? '',
@@ -487,7 +567,9 @@ function loadDraft () {
       'sfWasteNotes',
       'sfProductCategory',
       'sfOtherProductType',
-      'sfProductBrandName',
+      'sfManufacturer',
+      'sfOtherManufacturer',
+      'sfProductLine',
       'sfSetLotNumber',
       'sfSetsUsed',
       'sfAvgThickness',
@@ -549,7 +631,10 @@ function getPayload () {
       productCategory: product.productCategory,
       otherProductType:
         product.productCategory === 'Other' ? product.otherProductType : '',
-      productBrandName: product.productBrandName,
+      manufacturer: product.manufacturer,
+      otherManufacturer:
+        product.manufacturer === 'Other' ? product.otherManufacturer : '',
+      productLine: product.productLine,
       setLotNumber: product.setLotNumber,
       setsUsed: product.setsUsed,
       installedAreaSqFt: product.installedAreaSqFt,
@@ -605,8 +690,13 @@ function renderReview () {
                 }
               </div>
               <div class="mt-2 text-xs text-white/60">
-                Brand: ${entry.productBrandName || '—'}<br />
-                Lot: ${entry.setLotNumber || '—'}<br />
+                Manufacturer: ${
+                  entry.manufacturer === 'Other' && entry.otherManufacturer
+                    ? entry.otherManufacturer
+                    : entry.manufacturer || '—'
+                }<br />
+Product: ${entry.productLine || '—'}<br />
+Lot: ${entry.setLotNumber || '—'}<br />
                 Sets: ${entry.setsUsed || 0}<br />
                 Area: ${entry.installedAreaSqFt || 0} sq ft<br />
                 Thickness: ${entry.averageThicknessIn || 0} in
@@ -699,6 +789,7 @@ function validateStep (stepIndex) {
 }
 
 function resetFormUi () {
+  hideSubmitSuccess()
   formEl?.reset()
   savedProducts = []
   renderSavedProducts()
@@ -753,6 +844,84 @@ function updateJobSummary () {
   const shouldShow = step > 0 && parts.length > 0
   jobSummaryBar.classList.toggle('hidden', !shouldShow)
   jobSummaryText.textContent = shouldShow ? parts.join(' • ') : '—'
+}
+
+function populateManufacturerOptions () {
+  const manufacturerEl = byId('sfManufacturer')
+  if (!manufacturerEl) return
+
+  const current = manufacturerEl.value
+
+  manufacturerEl.innerHTML = `
+    <option value="">Select manufacturer</option>
+    ${FOAM_BRANDS.map(
+      brand => `<option value="${brand}">${brand}</option>`
+    ).join('')}
+  `
+
+  if (current) manufacturerEl.value = current
+}
+
+function bindManufacturerToggle () {
+  const manufacturerEl = byId('sfManufacturer')
+  const otherWrap = byId('sfOtherManufacturerWrap')
+  const otherInput = byId('sfOtherManufacturer')
+
+  if (!manufacturerEl || !otherWrap) return
+
+  const sync = () => {
+    const isOther = manufacturerEl.value === 'Other'
+    otherWrap.classList.toggle('hidden', !isOther)
+    if (!isOther && otherInput) otherInput.value = ''
+    saveDraft()
+    renderReview()
+  }
+
+  manufacturerEl.addEventListener('change', sync)
+  sync()
+}
+
+function hideSubmitSuccess () {
+  submitSuccessCard?.classList.add('hidden')
+  if (submitSuccessSummary) submitSuccessSummary.innerHTML = ''
+}
+
+function showSubmitSuccess (payload) {
+  if (!submitSuccessCard || !submitSuccessSummary) return
+
+  const productCount = Array.isArray(payload.productEntries)
+    ? payload.productEntries.length
+    : 0
+
+  submitSuccessSummary.innerHTML = `
+    <div class="rounded-xl border border-white/10 bg-neutral-950/40 px-4 py-3">
+      <div class="text-xs uppercase tracking-wide text-white/45">Job #</div>
+      <div class="mt-1 font-medium text-white">${payload.jobNumber || '—'}</div>
+    </div>
+
+    <div class="rounded-xl border border-white/10 bg-neutral-950/40 px-4 py-3">
+      <div class="text-xs uppercase tracking-wide text-white/45">Customer / Site</div>
+      <div class="mt-1 font-medium text-white">${
+        payload.customerName || '—'
+      }</div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <div class="rounded-xl border border-white/10 bg-neutral-950/40 px-4 py-3">
+        <div class="text-xs uppercase tracking-wide text-white/45">Products</div>
+        <div class="mt-1 font-medium text-white">${productCount}</div>
+      </div>
+
+      <div class="rounded-xl border border-white/10 bg-neutral-950/40 px-4 py-3">
+        <div class="text-xs uppercase tracking-wide text-white/45">Waste</div>
+        <div class="mt-1 font-medium text-white">${
+          payload.wasteGallons || 0
+        } gal</div>
+      </div>
+    </div>
+  `
+
+  submitSuccessCard.classList.remove('hidden')
 }
 
 async function postPayload (payload, endpoint = WEB_APP_URL) {
@@ -841,15 +1010,19 @@ async function submitLog () {
         'No connection. Log saved locally and will sync when online.'
       )
 
+      showSubmitSuccess(payload)
       resetFormUi()
+      showSubmitSuccess(payload)
       await updateQueueStatus()
       return
     }
 
     await postPayload(payload)
 
+    showSubmitSuccess(payload)
     showTimedStatus('Log submitted successfully.')
     resetFormUi()
+    showSubmitSuccess(payload)
     await tryFlushQueue()
   } catch (err) {
     await queueSubmission({
@@ -882,6 +1055,11 @@ addProductBtn?.addEventListener('click', () => {
   addCurrentProductToSaved()
 })
 
+newLogBtn?.addEventListener('click', () => {
+  hideSubmitSuccess()
+  resetFormUi()
+})
+
 window.addEventListener('online', () => {
   tryFlushQueue()
 })
@@ -910,11 +1088,14 @@ wizard = createWizard({
 })
 
 populateStateOptions()
+populateManufacturerOptions()
 loadDraft()
 setDefaultDateIfEmpty()
 bindSimpleFieldAutosave()
 bindYesNoButtons()
 bindProductCategoryToggle()
+bindManufacturerToggle()
+bindProductPresetButtons()
 wizard.setCurrentStep(loadCurrentStep())
 renderSavedProducts()
 syncEditModeUi()

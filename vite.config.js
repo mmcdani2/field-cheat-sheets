@@ -16,6 +16,14 @@ export default defineConfig({
         quickPricingTool: resolve(
           __dirname,
           'partials/hvac/quick-pricing-tool.html'
+        ),
+        serviceChecklist: resolve(
+          __dirname,
+          'partials/hvac/service-checklist.html'
+        ),
+        sprayFoamJobLog: resolve(
+          __dirname,
+          'partials/spray-foam/job-log.html'
         )
       }
     }

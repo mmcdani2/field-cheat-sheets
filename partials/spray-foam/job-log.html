@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -124,660 +124,673 @@
           </div>
         </div>
 
-        <form id="sprayFoamWizardForm" class="mt-5">
-          <div class="space-y-4">
-            <!-- STEP 1: JOB INFO -->
-            <section class="wizard-step" data-step="0">
-              <div
-                class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4"
-              >
-                <div>
-                  <label
-                    for="sfDate"
-                    class="block text-sm font-semibold text-white"
-                    >Date</label
-                  >
-                  <input
-                    id="sfDate"
-                    name="date"
-                    type="date"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="sfJobNumber"
-                    class="block text-sm font-semibold text-white"
-                    >Job #</label
-                  >
-                  <input
-                    id="sfJobNumber"
-                    name="jobNumber"
-                    type="text"
-                    autocapitalize="characters"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Enter job number"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="sfCustomerName"
-                    class="block text-sm font-semibold text-white"
-                    >Customer / Site Name</label
-                  >
-                  <input
-                    id="sfCustomerName"
-                    name="customerName"
-                    type="text"
-                    autocapitalize="words"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Customer or site name"
-                  />
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
+        <div id="formScreen">
+          <form id="sprayFoamWizardForm" class="mt-5">
+            <div class="space-y-4">
+              <!-- STEP 1: JOB INFO -->
+              <section class="wizard-step" data-step="0">
+                <div
+                  class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4"
+                >
                   <div>
                     <label
-                      for="sfCity"
+                      for="sfDate"
                       class="block text-sm font-semibold text-white"
-                      >City</label
+                      >Date</label
                     >
                     <input
-                      id="sfCity"
-                      name="city"
+                      id="sfDate"
+                      name="date"
+                      type="date"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="sfJobNumber"
+                      class="block text-sm font-semibold text-white"
+                      >Job #</label
+                    >
+                    <input
+                      id="sfJobNumber"
+                      name="jobNumber"
+                      type="text"
+                      autocapitalize="characters"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                      placeholder="Enter job number"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="sfCustomerName"
+                      class="block text-sm font-semibold text-white"
+                      >Customer / Site Name</label
+                    >
+                    <input
+                      id="sfCustomerName"
+                      name="customerName"
                       type="text"
                       autocapitalize="words"
                       class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                      placeholder="City"
+                      placeholder="Customer or site name"
                     />
                   </div>
 
-                  <div>
-                    <label
-                      for="sfState"
-                      class="block text-sm font-semibold text-white"
-                      >State</label
-                    >
-                    <select
-                      id="sfState"
-                      name="state"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                    >
-                      <option value="">Select</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="sfTech"
-                    class="block text-sm font-semibold text-white"
-                    >Sprayer</label
-                  >
-                  <input
-                    id="sfTech"
-                    name="tech"
-                    type="text"
-                    autocapitalize="words"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Sprayer name"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="sfHelperCrew"
-                    class="block text-sm font-semibold text-white"
-                    >Helper / Crew</label
-                  >
-                  <input
-                    id="sfHelperCrew"
-                    name="helperCrew"
-                    type="text"
-                    autocapitalize="words"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Helper or crew"
-                  />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-semibold text-white"
-                    >Photos uploaded to HCP?</label
-                  >
-                  <input
-                    id="sfPhotosUploaded"
-                    name="photosUploaded"
-                    type="hidden"
-                    value=""
-                  />
-
-                  <div class="mt-3 grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      class="yesNoBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-base font-bold text-white transition active:scale-[0.98]"
-                      data-target="sfPhotosUploaded"
-                      data-value="Yes"
-                    >
-                      Yes
-                    </button>
-
-                    <button
-                      type="button"
-                      class="yesNoBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-base font-bold text-white transition active:scale-[0.98]"
-                      data-target="sfPhotosUploaded"
-                      data-value="No"
-                    >
-                      No
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="sfJobNotes"
-                    class="block text-sm font-semibold text-white"
-                    >Other Notes</label
-                  >
-                  <textarea
-                    id="sfJobNotes"
-                    name="jobNotes"
-                    rows="4"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Any job notes"
-                  ></textarea>
-                </div>
-              </div>
-            </section>
-
-            <!-- STEP 2: CONDITIONS -->
-            <section class="wizard-step hidden" data-step="1">
-              <div
-                class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4"
-              >
-                <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label
-                      for="sfAmbientTemp"
-                      class="block text-sm font-semibold text-white"
-                      >Ambient Temp °F</label
-                    >
-                    <input
-                      id="sfAmbientTemp"
-                      name="ambientTemp"
-                      type="number"
-                      step="1"
-                      inputmode="numeric"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      for="sfSubstrateTemp"
-                      class="block text-sm font-semibold text-white"
-                      >Substrate Temp °F</label
-                    >
-                    <input
-                      id="sfSubstrateTemp"
-                      name="substrateTemp"
-                      type="number"
-                      step="1"
-                      inputmode="numeric"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label
-                      for="sfHumidity"
-                      class="block text-sm font-semibold text-white"
-                      >Humidity %</label
-                    >
-                    <input
-                      id="sfHumidity"
-                      name="humidity"
-                      type="number"
-                      step="1"
-                      inputmode="numeric"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      for="sfHoseTemp"
-                      class="block text-sm font-semibold text-white"
-                      >Hose Temp °F</label
-                    >
-                    <input
-                      id="sfHoseTemp"
-                      name="hoseTemp"
-                      type="number"
-                      step="1"
-                      inputmode="numeric"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label
-                      for="sfPressure"
-                      class="block text-sm font-semibold text-white"
-                      >Pressure (psi)</label
-                    >
-                    <input
-                      id="sfPressure"
-                      name="pressure"
-                      type="number"
-                      step="1"
-                      inputmode="numeric"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      for="sfDowntime"
-                      class="block text-sm font-semibold text-white"
-                      >Downtime (hr/min)</label
-                    >
-                    <input
-                      id="sfDowntime"
-                      name="downtime"
-                      type="text"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                      placeholder="0:00"
-                    />
-                    <p class="mt-2 text-xs text-white/50">Example: 0:30</p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <!-- STEP 3: CURRENT PRODUCT -->
-            <section class="wizard-step hidden" data-step="2">
-              <div
-                class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4"
-              >
-                <div>
-                  <p
-                    class="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400/90"
-                  >
-                    Product Entry
-                  </p>
-                  <h2 class="mt-2 text-lg font-bold text-white">
-                    Current Product
-                  </h2>
-                  <p class="mt-1 text-sm text-white/60">
-                    Fill this out for one product. Add another only if needed.
-                  </p>
-                  <div>
-                    <p
-                      class="text-xs font-semibold uppercase tracking-[0.2em] text-white/50"
-                    >
-                      Quick Presets
-                    </p>
-
-                    <div class="mt-3 grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
-                        data-category="Open Cell"
-                      >
-                        Open Cell
-                      </button>
-
-                      <button
-                        type="button"
-                        class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
-                        data-category="Closed Cell"
-                      >
-                        Closed Cell
-                      </button>
-
-                      <button
-                        type="button"
-                        class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
-                        data-category="Roofing Foam"
-                      >
-                        Roofing Foam
-                      </button>
-
-                      <button
-                        type="button"
-                        class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
-                        data-category="Lift Foam"
-                      >
-                        Lift Foam
-                      </button>
-
-                      <button
-                        type="button"
-                        class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
-                        data-category="Injection Foam"
-                      >
-                        Injection Foam
-                      </button>
-
-                      <button
-                        type="button"
-                        class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
-                        data-category="Coating"
-                      >
-                        Coating
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="sfProductCategory"
-                    class="block text-sm font-semibold text-white"
-                    >Product Category</label
-                  >
-                  <select
-                    id="sfProductCategory"
-                    name="productCategory"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                  >
-                    <option value="">Select product</option>
-                    <option value="Open Cell">Open Cell</option>
-                    <option value="Closed Cell">Closed Cell</option>
-                    <option value="Roofing Foam">Roofing Foam</option>
-                    <option value="Lift Foam">Lift Foam</option>
-                    <option value="Injection Foam">Injection Foam</option>
-                    <option value="Coating">Coating</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-
-                <div id="sfOtherProductWrap" class="hidden">
-                  <label
-                    for="sfOtherProductType"
-                    class="block text-sm font-semibold text-white"
-                    >Other Product Type</label
-                  >
-                  <input
-                    id="sfOtherProductType"
-                    name="otherProductType"
-                    type="text"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Type product name"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="sfManufacturer"
-                    class="block text-sm font-semibold text-white"
-                    >Manufacturer</label
-                  >
-                  <select
-                    id="sfManufacturer"
-                    name="manufacturer"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                  >
-                    <option value="">Select manufacturer</option>
-                  </select>
-                </div>
-
-                <div id="sfOtherManufacturerWrap" class="hidden">
-                  <label
-                    for="sfOtherManufacturer"
-                    class="block text-sm font-semibold text-white"
-                    >Other Manufacturer</label
-                  >
-                  <input
-                    id="sfOtherManufacturer"
-                    name="otherManufacturer"
-                    type="text"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Type manufacturer name"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="sfProductLine"
-                    class="block text-sm font-semibold text-white"
-                    >Product Name / Line</label
-                  >
-                  <input
-                    id="sfProductLine"
-                    name="productLine"
-                    type="text"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Product line or material name"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="sfSetLotNumber"
-                    class="block text-sm font-semibold text-white"
-                    >Set / Lot #</label
-                  >
-                  <input
-                    id="sfSetLotNumber"
-                    name="setLotNumber"
-                    type="text"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                    placeholder="Set or lot number"
-                  />
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label
-                      for="sfSetsUsed"
-                      class="block text-sm font-semibold text-white"
-                      >Sets Used</label
-                    >
-                    <input
-                      id="sfSetsUsed"
-                      name="setsUsed"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      inputmode="decimal"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                      placeholder="0"
-                    />
-                    <p class="mt-2 text-xs text-white/50">
-                      Decimals OK: 0.25, 0.5, 1.5
-                    </p>
-                  </div>
-
-                  <div>
-                    <label
-                      for="sfAvgThickness"
-                      class="block text-sm font-semibold text-white"
-                      >Avg Thickness (in)</label
-                    >
-                    <input
-                      id="sfAvgThickness"
-                      name="avgThickness"
-                      type="number"
-                      min="0"
-                      step="0.1"
-                      inputmode="decimal"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    for="sfInstalledArea"
-                    class="block text-sm font-semibold text-white"
-                    >Installed Area (sq ft)</label
-                  >
-                  <input
-                    id="sfInstalledArea"
-                    name="installedArea"
-                    type="number"
-                    min="0"
-                    step="1"
-                    inputmode="numeric"
-                    class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                    placeholder="0"
-                  />
-                </div>
-
-                <div
-                  class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4"
-                >
-                  <div class="flex items-center justify-between gap-3">
+                  <div class="grid grid-cols-2 gap-3">
                     <div>
-                      <h3 class="text-sm font-bold text-white">
-                        Saved Products
-                      </h3>
-                      <p class="mt-1 text-xs text-white/55">
-                        Products already added for this job
-                      </p>
+                      <label
+                        for="sfCity"
+                        class="block text-sm font-semibold text-white"
+                        >City</label
+                      >
+                      <input
+                        id="sfCity"
+                        name="city"
+                        type="text"
+                        autocapitalize="words"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                        placeholder="City"
+                      />
                     </div>
-                    <button
-                      id="addProductBtn"
-                      type="button"
-                      class="rounded-xl bg-amber-400 px-3 py-2 text-sm font-bold text-neutral-950"
-                    >
-                      Save & Add Another
-                    </button>
+
+                    <div>
+                      <label
+                        for="sfState"
+                        class="block text-sm font-semibold text-white"
+                        >State</label
+                      >
+                      <select
+                        id="sfState"
+                        name="state"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                      >
+                        <option value="">Select</option>
+                      </select>
+                    </div>
                   </div>
 
-                  <div id="sfSavedProducts" class="mt-4 space-y-3"></div>
-                </div>
-              </div>
-            </section>
-
-            <!-- STEP 4: WASTE + REVIEW -->
-            <section class="wizard-step hidden" data-step="3">
-              <div
-                class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4"
-              >
-                <div
-                  class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4"
-                >
-                  <h3 class="text-base font-bold text-white">Waste</h3>
-
-                  <div class="mt-4">
+                  <div>
                     <label
-                      for="sfWasteGallons"
+                      for="sfTech"
                       class="block text-sm font-semibold text-white"
-                      >Waste (gallons)</label
+                      >Sprayer</label
                     >
                     <input
-                      id="sfWasteGallons"
-                      name="wasteGallons"
-                      type="number"
-                      min="0"
-                      step="0.1"
-                      inputmode="decimal"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
-                      placeholder="0"
+                      id="sfTech"
+                      name="tech"
+                      type="text"
+                      autocapitalize="words"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                      placeholder="Sprayer name"
                     />
-                    <p class="mt-2 text-xs text-white/50">Gallons only</p>
                   </div>
 
-                  <div class="mt-4">
+                  <div>
                     <label
-                      for="sfWasteNotes"
+                      for="sfHelperCrew"
                       class="block text-sm font-semibold text-white"
-                      >Waste / Return Notes</label
+                      >Helper / Crew</label
+                    >
+                    <input
+                      id="sfHelperCrew"
+                      name="helperCrew"
+                      type="text"
+                      autocapitalize="words"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                      placeholder="Helper or crew"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-white"
+                      >Photos uploaded to HCP?</label
+                    >
+                    <input
+                      id="sfPhotosUploaded"
+                      name="photosUploaded"
+                      type="hidden"
+                      value=""
+                    />
+
+                    <div class="mt-3 grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        class="yesNoBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-base font-bold text-white transition active:scale-[0.98]"
+                        data-target="sfPhotosUploaded"
+                        data-value="Yes"
+                      >
+                        Yes
+                      </button>
+
+                      <button
+                        type="button"
+                        class="yesNoBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-base font-bold text-white transition active:scale-[0.98]"
+                        data-target="sfPhotosUploaded"
+                        data-value="No"
+                      >
+                        No
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      for="sfJobNotes"
+                      class="block text-sm font-semibold text-white"
+                      >Other Notes</label
                     >
                     <textarea
-                      id="sfWasteNotes"
-                      name="wasteNotes"
-                      rows="3"
-                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
-                      placeholder="Explain waste, returns, leftover material, etc."
+                      id="sfJobNotes"
+                      name="jobNotes"
+                      rows="4"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                      placeholder="Any job notes"
                     ></textarea>
                   </div>
                 </div>
+              </section>
 
+              <!-- STEP 2: CONDITIONS -->
+              <section class="wizard-step hidden" data-step="1">
                 <div
-                  class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4"
+                  class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4"
                 >
-                  <h3 class="text-base font-bold text-white">Review</h3>
-                  <div id="reviewList" class="mt-4 space-y-3 text-sm"></div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label
+                        for="sfAmbientTemp"
+                        class="block text-sm font-semibold text-white"
+                        >Ambient Temp °F</label
+                      >
+                      <input
+                        id="sfAmbientTemp"
+                        name="ambientTemp"
+                        type="number"
+                        step="1"
+                        inputmode="numeric"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                        placeholder="0"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        for="sfSubstrateTemp"
+                        class="block text-sm font-semibold text-white"
+                        >Substrate Temp °F</label
+                      >
+                      <input
+                        id="sfSubstrateTemp"
+                        name="substrateTemp"
+                        type="number"
+                        step="1"
+                        inputmode="numeric"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label
+                        for="sfHumidity"
+                        class="block text-sm font-semibold text-white"
+                        >Humidity %</label
+                      >
+                      <input
+                        id="sfHumidity"
+                        name="humidity"
+                        type="number"
+                        step="1"
+                        inputmode="numeric"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                        placeholder="0"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        for="sfHoseTemp"
+                        class="block text-sm font-semibold text-white"
+                        >Hose Temp °F</label
+                      >
+                      <input
+                        id="sfHoseTemp"
+                        name="hoseTemp"
+                        type="number"
+                        step="1"
+                        inputmode="numeric"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label
+                        for="sfPressure"
+                        class="block text-sm font-semibold text-white"
+                        >Pressure (psi)</label
+                      >
+                      <input
+                        id="sfPressure"
+                        name="pressure"
+                        type="number"
+                        step="1"
+                        inputmode="numeric"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                        placeholder="0"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        for="sfDowntime"
+                        class="block text-sm font-semibold text-white"
+                        >Downtime (hr/min)</label
+                      >
+                      <input
+                        id="sfDowntime"
+                        name="downtime"
+                        type="text"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                        placeholder="0:00"
+                      />
+                      <p class="mt-2 text-xs text-white/50">Example: 0:30</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </section>
-          </div>
-          <div
-            id="submitSuccessCard"
-            class="mt-4 hidden rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4"
-          >
-            <div
-              class="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300"
-            >
-              Submitted
+              </section>
+
+              <!-- STEP 3: CURRENT PRODUCT -->
+              <section class="wizard-step hidden" data-step="2">
+                <div
+                  class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4"
+                >
+                  <div>
+                    <p
+                      class="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400/90"
+                    >
+                      Product Entry
+                    </p>
+                    <h2 class="mt-2 text-lg font-bold text-white">
+                      Current Product
+                    </h2>
+                    <p class="mt-1 text-sm text-white/60">
+                      Fill this out for one product. Add another only if needed.
+                    </p>
+                    <div>
+                      <p
+                        class="text-xs font-semibold uppercase tracking-[0.2em] text-white/50"
+                      >
+                        Quick Presets
+                      </p>
+
+                      <div class="mt-3 grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
+                          data-category="Open Cell"
+                        >
+                          Open Cell
+                        </button>
+
+                        <button
+                          type="button"
+                          class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
+                          data-category="Closed Cell"
+                        >
+                          Closed Cell
+                        </button>
+
+                        <button
+                          type="button"
+                          class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
+                          data-category="Roofing Foam"
+                        >
+                          Roofing Foam
+                        </button>
+
+                        <button
+                          type="button"
+                          class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
+                          data-category="Lift Foam"
+                        >
+                          Lift Foam
+                        </button>
+
+                        <button
+                          type="button"
+                          class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
+                          data-category="Injection Foam"
+                        >
+                          Injection Foam
+                        </button>
+
+                        <button
+                          type="button"
+                          class="productPresetBtn rounded-xl border border-white/10 bg-neutral-900 px-3 py-3 text-sm font-semibold text-white"
+                          data-category="Coating"
+                        >
+                          Coating
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      for="sfProductCategory"
+                      class="block text-sm font-semibold text-white"
+                      >Product Category</label
+                    >
+                    <select
+                      id="sfProductCategory"
+                      name="productCategory"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                    >
+                      <option value="">Select product</option>
+                      <option value="Open Cell">Open Cell</option>
+                      <option value="Closed Cell">Closed Cell</option>
+                      <option value="Roofing Foam">Roofing Foam</option>
+                      <option value="Lift Foam">Lift Foam</option>
+                      <option value="Injection Foam">Injection Foam</option>
+                      <option value="Coating">Coating</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div id="sfOtherProductWrap" class="hidden">
+                    <label
+                      for="sfOtherProductType"
+                      class="block text-sm font-semibold text-white"
+                      >Other Product Type</label
+                    >
+                    <input
+                      id="sfOtherProductType"
+                      name="otherProductType"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                      placeholder="Type product name"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="sfManufacturer"
+                      class="block text-sm font-semibold text-white"
+                      >Manufacturer</label
+                    >
+                    <select
+                      id="sfManufacturer"
+                      name="manufacturer"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                    >
+                      <option value="">Select manufacturer</option>
+                    </select>
+                  </div>
+
+                  <div id="sfOtherManufacturerWrap" class="hidden">
+                    <label
+                      for="sfOtherManufacturer"
+                      class="block text-sm font-semibold text-white"
+                      >Other Manufacturer</label
+                    >
+                    <input
+                      id="sfOtherManufacturer"
+                      name="otherManufacturer"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                      placeholder="Type manufacturer name"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="sfProductLine"
+                      class="block text-sm font-semibold text-white"
+                      >Product Name / Line</label
+                    >
+                    <input
+                      id="sfProductLine"
+                      name="productLine"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                      placeholder="Product line or material name"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="sfSetLotNumber"
+                      class="block text-sm font-semibold text-white"
+                      >Set / Lot #</label
+                    >
+                    <input
+                      id="sfSetLotNumber"
+                      name="setLotNumber"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                      placeholder="Set or lot number"
+                    />
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label
+                        for="sfSetsUsed"
+                        class="block text-sm font-semibold text-white"
+                        >Sets Used</label
+                      >
+                      <input
+                        id="sfSetsUsed"
+                        name="setsUsed"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                        placeholder="0"
+                      />
+                      <p class="mt-2 text-xs text-white/50">
+                        Decimals OK: 0.25, 0.5, 1.5
+                      </p>
+                    </div>
+
+                    <div>
+                      <label
+                        for="sfAvgThickness"
+                        class="block text-sm font-semibold text-white"
+                        >Avg Thickness (in)</label
+                      >
+                      <input
+                        id="sfAvgThickness"
+                        name="avgThickness"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                        inputmode="decimal"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      for="sfInstalledArea"
+                      class="block text-sm font-semibold text-white"
+                      >Installed Area (sq ft)</label
+                    >
+                    <input
+                      id="sfInstalledArea"
+                      name="installedArea"
+                      type="number"
+                      min="0"
+                      step="1"
+                      inputmode="numeric"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                      placeholder="0"
+                    />
+                  </div>
+
+                  <div
+                    class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4"
+                  >
+                    <div class="flex items-center justify-between gap-3">
+                      <div>
+                        <h3 class="text-sm font-bold text-white">
+                          Saved Products
+                        </h3>
+                        <p class="mt-1 text-xs text-white/55">
+                          Products already added for this job
+                        </p>
+                      </div>
+                      <button
+                        id="addProductBtn"
+                        type="button"
+                        class="rounded-xl bg-amber-400 px-3 py-2 text-sm font-bold text-neutral-950"
+                      >
+                        Save & Add Another
+                      </button>
+                    </div>
+
+                    <div id="sfSavedProducts" class="mt-4 space-y-3"></div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- STEP 4: WASTE + REVIEW -->
+              <section class="wizard-step hidden" data-step="3">
+                <div
+                  class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4"
+                >
+                  <div
+                    class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4"
+                  >
+                    <h3 class="text-base font-bold text-white">Waste</h3>
+
+                    <div class="mt-4">
+                      <label
+                        for="sfWasteGallons"
+                        class="block text-sm font-semibold text-white"
+                        >Waste (gallons)</label
+                      >
+                      <input
+                        id="sfWasteGallons"
+                        name="wasteGallons"
+                        type="number"
+                        min="0"
+                        step="0.1"
+                        inputmode="decimal"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none focus:border-amber-400"
+                        placeholder="0"
+                      />
+                      <p class="mt-2 text-xs text-white/50">Gallons only</p>
+                    </div>
+
+                    <div class="mt-4">
+                      <label
+                        for="sfWasteNotes"
+                        class="block text-sm font-semibold text-white"
+                        >Waste / Return Notes</label
+                      >
+                      <textarea
+                        id="sfWasteNotes"
+                        name="wasteNotes"
+                        rows="3"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-amber-400"
+                        placeholder="Explain waste, returns, leftover material, etc."
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div
+                    class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4"
+                  >
+                    <h3 class="text-base font-bold text-white">Review</h3>
+                    <div id="reviewList" class="mt-4 space-y-3 text-sm"></div>
+                  </div>
+                </div>
+              </section>
             </div>
+            
+            <div
+              id="wizardError"
+              class="mt-4 hidden rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+            ></div>
 
-            <h3 class="mt-2 text-xl font-black text-white">Job Log Sent</h3>
+            <div
+              id="wizardStatus"
+              class="mt-4 hidden rounded-xl border px-4 py-3 text-sm"
+            ></div>
 
-            <div id="submitSuccessSummary" class="mt-4 space-y-3 text-sm"></div>
-
-            <div class="mt-4 grid grid-cols-2 gap-3">
+            <div
+              class="sticky bottom-0 z-20 mt-5 flex items-center gap-3 border-t border-white/10 bg-neutral-950/95 pt-4 backdrop-blur"
+            >
               <button
-                id="newLogBtn"
+                id="backBtn"
                 type="button"
-                class="rounded-xl bg-emerald-400 px-4 py-3 text-sm font-bold text-neutral-950"
+                class="hidden min-h-[48px] flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/85"
               >
-                New Log
+                Back
               </button>
 
-              <a
-                href="/spray-foam.html"
-                class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm font-semibold text-white/85"
+              <button
+                id="nextBtn"
+                type="button"
+                class="min-h-[48px] flex-1 rounded-xl bg-amber-400 px-4 py-3 text-sm font-bold text-neutral-950"
               >
-                Back to Spray Foam
-              </a>
+                Next
+              </button>
             </div>
-          </div>
-          <div
-            id="wizardError"
-            class="mt-4 hidden rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200"
-          ></div>
+          </form>
+        </div>
 
+        <div
+          id="submitSuccessScreen"
+          class="mt-5 hidden rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5"
+        >
           <div
-            id="wizardStatus"
-            class="mt-4 hidden rounded-xl border px-4 py-3 text-sm"
-          ></div>
-
-          <div
-            class="sticky bottom-0 z-20 mt-5 flex items-center gap-3 border-t border-white/10 bg-neutral-950/95 pt-4 backdrop-blur"
+            class="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300"
           >
+            Submitted
+          </div>
+
+          <h2
+            id="submitSuccessTitle"
+            class="mt-2 text-2xl font-black text-white"
+          >
+            Job Log Sent
+          </h2>
+
+          <p id="submitSuccessMessage" class="mt-2 text-sm text-white/70">
+            Your spray foam log was submitted successfully.
+          </p>
+
+          <div id="submitSuccessSummary" class="mt-4 space-y-3 text-sm"></div>
+
+          <div class="mt-5 grid grid-cols-2 gap-3">
             <button
-              id="backBtn"
+              id="newLogBtn"
               type="button"
-              class="hidden min-h-[48px] flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/85"
+              class="rounded-xl bg-emerald-400 px-4 py-3 text-sm font-bold text-neutral-950"
             >
-              Back
+              Start New Log
             </button>
 
-            <button
-              id="nextBtn"
-              type="button"
-              class="min-h-[48px] flex-1 rounded-xl bg-amber-400 px-4 py-3 text-sm font-bold text-neutral-950"
+            <a
+              href="/spray-foam.html"
+              class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm font-semibold text-white/85"
             >
-              Next
-            </button>
+              Back to Spray Foam
+            </a>
           </div>
-        </form>
+        </div>
 
         <template id="savedProductCardTemplate">
           <div

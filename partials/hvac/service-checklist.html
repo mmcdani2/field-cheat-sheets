@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Mechanical | Service Checklist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="../../js/hvac/service-checklist.js"></script>
+  </head>
+  <body class="min-h-screen bg-neutral-950 text-white">
+    <main class="min-h-screen p-4">
+      <section
+        class="mx-auto w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 shadow-2xl"
+      >
+        <div class="flex items-center justify-between">
+          <button
+            type="button"
+            onclick="history.back()"
+            class="inline-flex items-center gap-2 text-sm text-white/70 transition hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9.707 4.293a1 1 0 010 1.414L6.414 9H17a1 1 0 110 2H6.414l3.293 3.293a1 1 0 01-1.414 1.414l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 0z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span>Back</span>
+          </button>
+
+          <a
+            href="/index.html"
+            class="inline-flex items-center gap-2 text-sm text-white/70 transition hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M10.707 1.293a1 1 0 00-1.414 0l-8 8A1 1 0 002 11h1v6a1 1 0 001 1h4a1 1 0 001-1v-4h2v4a1 1 0 001 1h4a1 1 0 001-1v-6h1a1 1 0 00.707-1.707l-8-8z"
+              />
+            </svg>
+            <span>Home</span>
+          </a>
+        </div>
+
+        <div class="mt-4">
+          <p
+            class="text-xs font-semibold uppercase tracking-[0.24em] text-[#e5621c]/90"
+          >
+            Urban Mechanical
+          </p>
+          <h1 class="mt-2 text-3xl font-black tracking-tight">
+            Service Checklist
+          </h1>
+          <p class="mt-2 text-sm text-white/65">
+            Tune-up, diagnostic, and customer-facing service summary.
+          </p>
+        </div>
+
+        <div class="mt-5">
+          <div class="h-2 w-full overflow-hidden rounded-full bg-white/10">
+            <div
+              id="wizardProgress"
+              class="h-full w-[20%] rounded-full bg-[#e5621c] transition-all duration-300"
+            ></div>
+          </div>
+          <div id="wizardStepText" class="mt-2 text-xs text-white/50">
+            Step 1 of 5
+          </div>
+        </div>
+
+        <div
+          id="jobSummaryBar"
+          class="sticky top-0 z-20 mt-4 hidden rounded-2xl border border-[#e5621c]/20 bg-neutral-950/95 px-4 py-3 shadow-lg backdrop-blur"
+        >
+          <div class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#e5621c]/90">
+            Current Call
+          </div>
+          <div id="jobSummaryText" class="mt-1 text-sm font-medium text-white/85">
+            —
+          </div>
+        </div>
+
+        <div id="formScreen">
+          <form id="serviceChecklistForm" class="mt-5">
+            <div class="space-y-4">
+              <!-- STEP 1 -->
+              <section class="wizard-step" data-step="0">
+                <div class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div>
+                    <label for="svcDate" class="block text-sm font-semibold text-white">
+                      Date
+                    </label>
+                    <input
+                      id="svcDate"
+                      name="date"
+                      type="date"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-[#e5621c]"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="svcJobNumber" class="block text-sm font-semibold text-white">
+                      Job #
+                    </label>
+                    <input
+                      id="svcJobNumber"
+                      name="jobNumber"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="Enter job number"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="svcCustomerName" class="block text-sm font-semibold text-white">
+                      Customer / Site Name
+                    </label>
+                    <input
+                      id="svcCustomerName"
+                      name="customerName"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="Customer or site name"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="svcAddress" class="block text-sm font-semibold text-white">
+                      Address
+                    </label>
+                    <input
+                      id="svcAddress"
+                      name="address"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="Street address"
+                    />
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label for="svcCity" class="block text-sm font-semibold text-white">
+                        City
+                      </label>
+                      <input
+                        id="svcCity"
+                        name="city"
+                        type="text"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                        placeholder="City"
+                      />
+                    </div>
+
+                    <div>
+                      <label for="svcState" class="block text-sm font-semibold text-white">
+                        State
+                      </label>
+                      <select
+                        id="svcState"
+                        name="state"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none focus:border-[#e5621c]"
+                      >
+                        <option value="">Select</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="svcTech" class="block text-sm font-semibold text-white">
+                      Tech
+                    </label>
+                    <input
+                      id="svcTech"
+                      name="tech"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="Technician name"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <!-- STEP 2 -->
+              <section class="wizard-step hidden" data-step="1">
+                <div class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#e5621c]/90">
+                      Service Type
+                    </p>
+
+                    <input id="svcChecklistType" name="checklistType" type="hidden" value="" />
+
+                    <div class="mt-3 grid grid-cols-1 gap-3">
+                      <button
+                        type="button"
+                        class="checklistTypeBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-left text-base font-bold text-white transition active:scale-[0.98]"
+                        data-value="Cooling Tune-Up"
+                      >
+                        Cooling Tune-Up
+                      </button>
+
+                      <button
+                        type="button"
+                        class="checklistTypeBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-left text-base font-bold text-white transition active:scale-[0.98]"
+                        data-value="Heating Tune-Up"
+                      >
+                        Heating Tune-Up
+                      </button>
+
+                      <button
+                        type="button"
+                        class="checklistTypeBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-left text-base font-bold text-white transition active:scale-[0.98]"
+                        data-value="Diagnostic"
+                      >
+                        Diagnostic
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="svcSystemType" class="block text-sm font-semibold text-white">
+                      System Type
+                    </label>
+                    <input
+                      id="svcSystemType"
+                      name="systemType"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="Split system, package unit, mini split, furnace, etc."
+                    />
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label for="svcEquipmentBrand" class="block text-sm font-semibold text-white">
+                        Equipment Brand
+                      </label>
+                      <input
+                        id="svcEquipmentBrand"
+                        name="equipmentBrand"
+                        type="text"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                        placeholder="Carrier, Rheem, Bosch"
+                      />
+                    </div>
+
+                    <div>
+                      <label for="svcTonnage" class="block text-sm font-semibold text-white">
+                        Tonnage / Size
+                      </label>
+                      <input
+                        id="svcTonnage"
+                        name="tonnage"
+                        type="text"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                        placeholder="3 ton, 80k BTU"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="svcEquipmentModel" class="block text-sm font-semibold text-white">
+                      Model #
+                    </label>
+                    <input
+                      id="svcEquipmentModel"
+                      name="equipmentModel"
+                      type="text"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="Model number if known"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <!-- STEP 3 -->
+              <section class="wizard-step hidden" data-step="2">
+                <div class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#e5621c]/90">
+                      Findings
+                    </p>
+                    <h2 class="mt-2 text-lg font-bold text-white">
+                      Inspection Results
+                    </h2>
+                    <p class="mt-1 text-sm text-white/60">
+                      Mark the condition of each item for the customer summary.
+                    </p>
+                  </div>
+
+                  <div class="space-y-3">
+                    <div class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4">
+                      <div class="text-sm font-semibold text-white">Filter Condition</div>
+                      <select
+                        id="svcFilterCondition"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none focus:border-[#e5621c]"
+                      >
+                        <option value="">Select</option>
+                        <option value="Good">Good</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Not Checked">Not Checked</option>
+                      </select>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4">
+                      <div class="text-sm font-semibold text-white">Drain / Condensate</div>
+                      <select
+                        id="svcDrainCondition"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none focus:border-[#e5621c]"
+                      >
+                        <option value="">Select</option>
+                        <option value="Good">Good</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Not Checked">Not Checked</option>
+                      </select>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4">
+                      <div class="text-sm font-semibold text-white">Electrical Components</div>
+                      <select
+                        id="svcElectricalCondition"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none focus:border-[#e5621c]"
+                      >
+                        <option value="">Select</option>
+                        <option value="Good">Good</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Not Checked">Not Checked</option>
+                      </select>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4">
+                      <div class="text-sm font-semibold text-white">Blower / Airflow</div>
+                      <select
+                        id="svcAirflowCondition"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none focus:border-[#e5621c]"
+                      >
+                        <option value="">Select</option>
+                        <option value="Good">Good</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Not Checked">Not Checked</option>
+                      </select>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4">
+                      <div class="text-sm font-semibold text-white">Outdoor Coil / Condenser</div>
+                      <select
+                        id="svcOutdoorCondition"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none focus:border-[#e5621c]"
+                      >
+                        <option value="">Select</option>
+                        <option value="Good">Good</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Not Checked">Not Checked</option>
+                      </select>
+                    </div>
+
+                    <div class="rounded-2xl border border-white/10 bg-neutral-900/70 p-4">
+                      <div class="text-sm font-semibold text-white">Refrigerant / Performance</div>
+                      <select
+                        id="svcPerformanceCondition"
+                        class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-950 px-4 py-3 text-base text-white outline-none focus:border-[#e5621c]"
+                      >
+                        <option value="">Select</option>
+                        <option value="Good">Good</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Urgent">Urgent</option>
+                        <option value="Not Checked">Not Checked</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- STEP 4 -->
+              <section class="wizard-step hidden" data-step="3">
+                <div class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#e5621c]/90">
+                      Summary
+                    </p>
+                    <h2 class="mt-2 text-lg font-bold text-white">
+                      Recommendations
+                    </h2>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-semibold text-white">
+                      Overall System Status
+                    </label>
+
+                    <input id="svcOverallStatus" type="hidden" value="" />
+
+                    <div class="mt-3 grid grid-cols-1 gap-3">
+                      <button
+                        type="button"
+                        class="overallStatusBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-left text-base font-bold text-white transition active:scale-[0.98]"
+                        data-value="Good"
+                      >
+                        Good
+                      </button>
+
+                      <button
+                        type="button"
+                        class="overallStatusBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-left text-base font-bold text-white transition active:scale-[0.98]"
+                        data-value="Needs Attention"
+                      >
+                        Needs Attention
+                      </button>
+
+                      <button
+                        type="button"
+                        class="overallStatusBtn rounded-2xl border border-white/10 bg-neutral-900 px-4 py-4 text-left text-base font-bold text-white transition active:scale-[0.98]"
+                        data-value="Urgent"
+                      >
+                        Urgent
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="svcFindingsSummary" class="block text-sm font-semibold text-white">
+                      Findings Summary
+                    </label>
+                    <textarea
+                      id="svcFindingsSummary"
+                      rows="4"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="Summarize what you found"
+                    ></textarea>
+                  </div>
+
+                  <div>
+                    <label for="svcRecommendedActions" class="block text-sm font-semibold text-white">
+                      Recommended Actions
+                    </label>
+                    <textarea
+                      id="svcRecommendedActions"
+                      rows="4"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="What do you recommend next?"
+                    ></textarea>
+                  </div>
+
+                  <div>
+                    <label for="svcCustomerNotes" class="block text-sm font-semibold text-white">
+                      Customer Notes
+                    </label>
+                    <textarea
+                      id="svcCustomerNotes"
+                      rows="3"
+                      class="mt-3 block w-full rounded-xl border border-white/10 bg-neutral-900 px-4 py-3 text-base text-white outline-none placeholder:text-white/30 focus:border-[#e5621c]"
+                      placeholder="Optional extra notes for the customer"
+                    ></textarea>
+                  </div>
+                </div>
+              </section>
+
+              <!-- STEP 5 -->
+              <section class="wizard-step hidden" data-step="4">
+                <div class="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-[#e5621c]/90">
+                      Customer Report
+                    </p>
+                    <h2 class="mt-2 text-lg font-bold text-white">
+                      Ready to Print
+                    </h2>
+                    <p class="mt-1 text-sm text-white/60">
+                      Review this summary, then print it for the customer.
+                    </p>
+                  </div>
+
+                  <div
+                    id="customerReportPreview"
+                    class="space-y-3 rounded-2xl border border-white/10 bg-neutral-900/70 p-4"
+                  ></div>
+
+                  <button
+                    id="printReportBtn"
+                    type="button"
+                    class="w-full rounded-xl bg-[#e5621c] px-4 py-3 text-sm font-bold text-neutral-950"
+                  >
+                    Print Customer Report
+                  </button>
+                </div>
+              </section>
+            </div>
+
+            <div
+              id="wizardError"
+              class="mt-4 hidden rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+            ></div>
+
+            <div
+              id="wizardStatus"
+              class="mt-4 hidden rounded-xl border px-4 py-3 text-sm"
+            ></div>
+
+            <div
+              class="sticky bottom-0 z-20 -mx-5 mt-5 flex items-center gap-3 border-t border-white/10 bg-neutral-950/95 px-5 py-3 backdrop-blur"
+            >
+              <button
+                id="backBtn"
+                type="button"
+                class="hidden min-h-[48px] flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/85"
+              >
+                Back
+              </button>
+
+              <button
+                id="nextBtn"
+                type="button"
+                class="min-h-[48px] flex-1 rounded-xl bg-[#e5621c] px-4 py-3 text-sm font-bold text-neutral-950"
+              >
+                Next
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div
+          id="submitSuccessScreen"
+          class="mt-5 hidden rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-5"
+        >
+          <div class="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300">
+            Done
+          </div>
+
+          <h2 class="mt-2 text-2xl font-black text-white">
+            Checklist Ready
+          </h2>
+
+          <p class="mt-2 text-sm text-white/70">
+            Your service report is complete.
+          </p>
+
+          <div id="submitSuccessSummary" class="mt-4 space-y-3 text-sm"></div>
+
+          <div class="mt-5 grid grid-cols-2 gap-3">
+            <button
+              id="newChecklistBtn"
+              type="button"
+              class="rounded-xl bg-emerald-400 px-4 py-3 text-sm font-bold text-neutral-950"
+            >
+              Start New
+            </button>
+
+            <a
+              href="/hvac.html"
+              class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm font-semibold text-white/85"
+            >
+              Back to HVAC
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

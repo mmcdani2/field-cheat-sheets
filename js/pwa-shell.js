@@ -1,4 +1,5 @@
 const OFFLINE_READY_KEY = "fieldRef.offlineReadySeen";
+const APP_VERSION = "2026.03.12.2";
 
 let deferredPrompt = null;
 
@@ -47,6 +48,36 @@ function hideBanner() {
   el.classList.add("hidden");
 }
 
+function showUpdateBanner(onReload) {
+  const el = byId("pwaBanner");
+  const text = byId("pwaBannerText");
+  const dismissBtn = byId("dismissPwaBannerBtn");
+  if (!el || !text) return;
+
+  text.textContent = "A newer version of the app is ready. Tap reload to update.";
+
+  let className = "mt-4 rounded-2xl border px-4 py-3 text-sm";
+  className += " border-[#e5621c]/20 bg-[#e5621c]/10 text-white";
+
+  el.className = className;
+  el.classList.remove("hidden");
+
+  let reloadBtn = document.getElementById("reloadAppBtn");
+  if (!reloadBtn) {
+    reloadBtn = document.createElement("button");
+    reloadBtn.id = "reloadAppBtn";
+    reloadBtn.type = "button";
+    reloadBtn.className =
+      "mt-3 w-full rounded-xl bg-[#e5621c] px-4 py-3 text-sm font-bold text-neutral-950";
+    reloadBtn.textContent = "Reload App";
+    el.appendChild(reloadBtn);
+  }
+
+  reloadBtn.onclick = onReload;
+
+  if (dismissBtn) dismissBtn.classList.add("hidden");
+}
+
 function showInstallButton() {
   byId("installAppBtn")?.classList.remove("hidden");
 }
@@ -91,7 +122,34 @@ function registerServiceWorker() {
   ) {
     window.addEventListener("load", async () => {
       try {
-        await navigator.serviceWorker.register("/sw.js");
+        const registration = await navigator.serviceWorker.register("/sw.js");
+
+        setInterval(() => {
+          registration.update();
+        }, 60 * 1000);
+
+        registration.addEventListener("updatefound", () => {
+          const newWorker = registration.installing;
+          if (!newWorker) return;
+
+          newWorker.addEventListener("statechange", () => {
+            if (
+              newWorker.state === "installed" &&
+              navigator.serviceWorker.controller
+            ) {
+              showUpdateBanner(() => {
+                newWorker.postMessage({ type: "SKIP_WAITING" });
+              });
+            }
+          });
+        });
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
       } catch (err) {
         console.error("SW registration failed:", err);
       }
